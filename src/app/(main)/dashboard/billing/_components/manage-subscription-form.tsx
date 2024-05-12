@@ -29,7 +29,7 @@ export function ManageSubscriptionForm({
         });
 
         if (session) {
-          window.location.href = session.url || "/dashboard/billing";
+          window.location.href = session.url ?? "/dashboard/billing";
         }
       } catch (err) {
         err instanceof Error

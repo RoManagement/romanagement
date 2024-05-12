@@ -47,7 +47,7 @@ export function Posts({ promises }: PostsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <NewPost
-        isEligible={(optimisticPosts.length < 2 || subscriptionPlan?.isPro) || false}
+        isEligible={(optimisticPosts.length < 2 ?? subscriptionPlan?.isPro) ?? false}
         setOptimisticPosts={setOptimisticPosts}
       />
       {optimisticPosts.map((post) => (

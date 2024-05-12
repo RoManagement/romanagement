@@ -42,7 +42,7 @@ export const UserDropdown = ({
       <DropdownMenuTrigger className={className}>
         {/* eslint @next/next/no-img-element:off */}
         <img
-          src={avatar || "https://source.boringavatars.com/marble/60/" + email}
+          src={avatar ?? "https://source.boringavatars.com/marble/60/" + email}
           alt="Avatar"
           className="block h-8 w-8 rounded-full leading-none"
           width={64}

@@ -11,8 +11,8 @@ export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
-  const storedState = cookies().get("state")?.value || null;
-  const storedCodeVerifier = cookies().get("code_verifier")?.value || "";
+  const storedState = cookies().get("state")?.value ?? null;
+  const storedCodeVerifier = cookies().get("code_verifier")?.value ?? "";
 
   if (!code || !state || !storedState || state !== storedState) {
     return new Response(null, {

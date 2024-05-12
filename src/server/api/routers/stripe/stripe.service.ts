@@ -24,7 +24,7 @@ export const getStripePlans = async (ctx: ProtectedTRPCContext) => {
         ...plan,
         price:
           plan.stripePriceId === proPlan.stripePriceId
-            ? formatPrice((proPrice.unit_amount || 0) / 100, {
+            ? formatPrice((proPrice.unit_amount ?? 0) / 100, {
                 currency: proPrice.currency,
               })
             : formatPrice(0 / 100, { currency: proPrice.currency }),
@@ -45,7 +45,7 @@ export const getLandingStripePlans = async () => {
         ...plan,
         price:
           plan.stripePriceId === proPlan.stripePriceId
-            ? formatPrice((proPrice.unit_amount || 0) / 100, {
+            ? formatPrice((proPrice.unit_amount ?? 0) / 100, {
                 currency: proPrice.currency,
               })
             : formatPrice(0 / 100, { currency: proPrice.currency }),
@@ -76,7 +76,7 @@ export const getStripePlan = async (ctx: ProtectedTRPCContext) => {
     // Check if user is on a pro plan
     const isPro =
       !!user.stripePriceId &&
-      (user.stripeCurrentPeriodEnd?.getTime() || 0) + 86_400_000 > Date.now();
+      (user.stripeCurrentPeriodEnd?.getTime() ?? 0) + 86_400_000 > Date.now();
 
     const plan = isPro ? proPlan : freePlan;
 

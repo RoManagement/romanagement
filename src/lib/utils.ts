@@ -45,8 +45,8 @@ export function formatPrice(
 ) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: options.currency || "USD",
-    notation: options.notation || "compact",
+    currency: options.currency ?? "USD",
+    notation: options.notation ?? "compact",
     ...options,
   }).format(Number(price));
 }
