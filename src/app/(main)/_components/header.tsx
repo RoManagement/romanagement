@@ -13,7 +13,7 @@ export const Header = async () => {
         <Link className="flex items-center justify-center text-xl font-medium" href="/">
           <RocketIcon className="mr-2 h-5 w-5" /> {APP_TITLE} Dashboard
         </Link>
-        {user ? <UserDropdown email={user.email} avatar={user.avatar} className="ml-auto" /> : null}
+        {user ? <UserDropdown email={user.email ?? ""} avatar={user.avatar} className="ml-auto" /> : null}
       </div>
     </header>
   );
