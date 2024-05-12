@@ -264,7 +264,7 @@ export async function resetPassword(
   if (!parsed.success) {
     const err = parsed.error.flatten();
     return {
-      error: err.fieldErrors.password?.[0] ?? err.fieldErrors.token?.[0],
+      error: err.fieldErrors.password?.[0] || err.fieldErrors.token?.[0],
     };
   }
   const { token, password } = parsed.data;

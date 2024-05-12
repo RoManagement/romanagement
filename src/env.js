@@ -45,7 +45,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     SMTP_HOST: process.env.SMTP_HOST,
-    SMTP_PORT: parseInt(process.env.SMTP_PORT ?? ""),
+    SMTP_PORT: parseInt(process.env.SMTP_PORT || ""),
     SMTP_USER: process.env.SMTP_USER,
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
     ROBLOX_CLIENT_ID: process.env.ROBLOX_CLIENT_ID,

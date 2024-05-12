@@ -28,7 +28,7 @@ export async function Billing({ stripePromises }: BillingProps) {
     <>
       <section>
         <Card className="space-y-2 p-8">
-          <h3 className="text-lg font-semibold sm:text-xl">{plan?.name ?? "Free"} plan</h3>
+          <h3 className="text-lg font-semibold sm:text-xl">{plan?.name || "Free"} plan</h3>
           <p className="text-sm text-muted-foreground">
             {!plan?.isPro
               ? "The free plan is limited to 2 posts. Upgrade to the Pro plan to unlock unlimited posts."
@@ -73,7 +73,7 @@ export async function Billing({ stripePromises }: BillingProps) {
               ) : (
                 <ManageSubscriptionForm
                   stripePriceId={item.stripePriceId}
-                  isPro={plan?.isPro ?? false}
+                  isPro={plan?.isPro || false}
                   stripeCustomerId={plan?.stripeCustomerId}
                   stripeSubscriptionId={plan?.stripeSubscriptionId}
                 />
