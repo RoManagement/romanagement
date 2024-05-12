@@ -135,7 +135,6 @@ export const manageSubscription = async (
   }
 
   // If the user is not subscribed to a plan, we create a Stripe Checkout session
-  console.log("Creating Stripe Checkout session...");
   const stripeSession = await ctx.stripe.checkout.sessions.create({
     success_url: billingUrl,
     cancel_url: billingUrl,
