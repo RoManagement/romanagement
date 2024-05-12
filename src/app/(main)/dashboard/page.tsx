@@ -11,8 +11,8 @@ import { myPostsSchema } from "@/server/api/routers/post/post.input";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
-  title: "Posts",
-  description: "Manage your posts here",
+  title: "Workspaces",
+  description: "Manage your workspaces here",
 };
 
 interface Props {
@@ -39,8 +39,8 @@ export default async function DashboardPage({ searchParams }: Props) {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold md:text-4xl">Posts</h1>
-        <p className="text-sm text-muted-foreground">Manage your posts here</p>
+        <h1 className="text-3xl font-bold md:text-4xl">Workspaces</h1>
+        <p className="text-sm text-muted-foreground">Manage your workspaces here</p>
       </div>
       <React.Suspense fallback={<PostsSkeleton />}>
         <Posts promises={promises} />

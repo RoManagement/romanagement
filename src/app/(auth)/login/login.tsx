@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PasswordInput } from "@/components/password-input";
-import { DiscordLogoIcon } from "@/components/icons";
+import { SiRoblox } from "react-icons/si"
 import { APP_TITLE } from "@/lib/constants";
 import { login } from "@/lib/auth/actions";
 import { Label } from "@/components/ui/label";
@@ -31,9 +31,9 @@ export function Login() {
       </CardHeader>
       <CardContent>
         <Button variant="outline" className="w-full" asChild>
-          <Link href="/login/discord">
-            <DiscordLogoIcon className="mr-2 h-5 w-5" />
-            Log in with Discord
+          <Link href="/login/roblox">
+            <SiRoblox className="mr-2 h-5 w-5" />
+            Log in with ROBLOX
           </Link>
         </Button>
         <div className="my-2 flex items-center">

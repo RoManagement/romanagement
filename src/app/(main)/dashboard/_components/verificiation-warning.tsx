@@ -15,7 +15,7 @@ export async function VerificiationWarning() {
         <div className="w-full">
           <AlertTitle>Account verification required</AlertTitle>
           <AlertDescription>
-            A verification email has been sent to your email address. Please verify your account to
+            You are required to have an email on file incase you lose access to your account or need to reset your password. Please verify your account to
             access all features.
           </AlertDescription>
         </div>

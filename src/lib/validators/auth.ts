@@ -6,6 +6,11 @@ export const signupSchema = z.object({
 });
 export type SignupInput = z.infer<typeof signupSchema>;
 
+export const setEmailSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+});
+export type EmailInput = z.infer<typeof signupSchema>;
+
 export const loginSchema = z.object({
   email: z.string().email("Please enter a valid email."),
   password: z

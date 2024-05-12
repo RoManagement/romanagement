@@ -72,7 +72,7 @@ export const NewPost = ({ isEligible, setOptimisticPosts }: NewPostProps) => {
     >
       <div className="flex flex-col items-center gap-4">
         <FilePlusIcon className="h-10 w-10" />
-        <p className="text-sm">New Post</p>
+        <p className="text-sm">New Workspace</p>
       </div>
     </Button>
   );

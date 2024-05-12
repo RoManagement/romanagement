@@ -16,8 +16,9 @@ export const users = pgTable(
   "users",
   {
     id: varchar("id", { length: 21 }).primaryKey(),
-    discordId: varchar("discord_id", { length: 255 }).unique(),
-    email: varchar("email", { length: 255 }).unique().notNull(),
+    robloxId: varchar("roblox_id", { length: 255 }).unique(),
+    robloxUsername: varchar("roblox_username", { length: 255 }),
+    email: varchar("email", { length: 255 }).unique(),
     emailVerified: boolean("email_verified").default(false).notNull(),
     hashedPassword: varchar("hashed_password", { length: 255 }),
     avatar: varchar("avatar", { length: 255 }),
@@ -30,7 +31,7 @@ export const users = pgTable(
   },
   (t) => ({
     emailIdx: index("user_email_idx").on(t.email),
-    discordIdx: index("user_discord_idx").on(t.discordId),
+    robloxIdx: index("user_roblox_idx").on(t.robloxId),
   }),
 );
 

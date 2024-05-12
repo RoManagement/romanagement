@@ -9,17 +9,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { validateRequest } from "@/lib/auth/validate-request";
 
 const routes = [
   { name: "Home", href: "/" },
   { name: "Features", href: "/#features" },
-  {
-    name: "Documentation",
-    href: "https://www.touha.dev/posts/simple-nextjs-t3-authentication-with-lucia",
-  },
+  { name: "Pricing", href: "/#pricing"},
 ] as const;
 
-export const Header = () => {
+export const Header = async () => {
+  const { user } = await validateRequest();
+
   return (
     <header className="px-2 py-4 lg:py-6">
       <div className="container flex items-center gap-2 p-0">
@@ -62,7 +62,9 @@ export const Header = () => {
         </nav>
         <div className="ml-auto">
           <Button asChild variant={"secondary"}>
-            <Link href="/login">Login</Link>
+            <Link href={user ? "/dashboard" : "/login"}>
+              {user ? "Dashboard" : "Login"}
+            </Link>
           </Button>
         </div>
       </div>

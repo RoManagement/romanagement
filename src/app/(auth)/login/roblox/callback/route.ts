@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { generateId } from "lucia";
 import { OAuth2RequestError } from "arctic";
 import { eq } from "drizzle-orm";
-import { discord, lucia } from "@/lib/auth";
+import { roblox, lucia } from "@/lib/auth";
 import { db } from "@/server/db";
 import { Paths } from "@/lib/constants";
 import { users } from "@/server/db/schema";
@@ -11,7 +11,8 @@ export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
-  const storedState = cookies().get("discord_oauth_state")?.value ?? null;
+  const storedState = cookies().get("state")?.value ?? null;
+  const storedCodeVerifier = cookies().get("code_verifier")?.value || "";
 
   if (!code || !state || !storedState || state !== storedState) {
     return new Response(null, {
@@ -21,42 +22,36 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   try {
-    const tokens = await discord.validateAuthorizationCode(code);
+    const tokens = await roblox.validateAuthorizationCode(
+      code,
+      storedCodeVerifier
+    );
 
-    const discordUserRes = await fetch("https://discord.com/api/users/@me", {
+    const robloxUserRes = await fetch("https://apis.roblox.com/oauth/v1/userinfo", {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
-    const discordUser = (await discordUserRes.json()) as DiscordUser;
 
-    if (!discordUser.email || !discordUser.verified) {
-      return new Response(
-        JSON.stringify({
-          error: "Your Discord account must have a verified email address.",
-        }),
-        { status: 400, headers: { Location: Paths.Login } },
-      );
-    }
+    const robloxUser = (await robloxUserRes.json()) as RobloxProfile;
+
     const existingUser = await db.query.users.findFirst({
       where: (table, { eq, or }) =>
         or(
-          eq(table.discordId, discordUser.id),
-          eq(table.email, discordUser.email!),
+          eq(table.robloxId, robloxUser.sub),
         ),
     });
 
-    const avatar = discordUser.avatar
-      ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.webp`
-      : null;
+    const avatar = robloxUser.picture;
 
     if (!existingUser) {
       const userId = generateId(21);
       await db.insert(users).values({
         id: userId,
-        email: discordUser.email,
-        emailVerified: true,
-        discordId: discordUser.id,
+        email: null,
+        emailVerified: false,
+        robloxId: robloxUser.sub,
+        robloxUsername: robloxUser.preferred_username,
         avatar,
       });
       const session = await lucia.createSession(userId, {});
@@ -73,14 +68,13 @@ export async function GET(request: Request): Promise<Response> {
     }
 
     if (
-      existingUser.discordId !== discordUser.id ||
+      existingUser.robloxId !== robloxUser.sub ||
       existingUser.avatar !== avatar
     ) {
       await db
         .update(users)
         .set({
-          discordId: discordUser.id,
-          emailVerified: true,
+          robloxId: robloxUser.sub,
           avatar,
         })
         .where(eq(users.id, existingUser.id));
@@ -111,15 +105,13 @@ export async function GET(request: Request): Promise<Response> {
   }
 }
 
-interface DiscordUser {
-  id: string;
-  username: string;
-  avatar: string | null;
-  banner: string | null;
-  global_name: string | null;
-  banner_color: string | null;
-  mfa_enabled: boolean;
-  locale: string;
-  email: string | null;
+interface RobloxProfile {
+  sub: string;
+  name: string;
+  nickname: string;
+  preferred_username: string;
+  created_at: number;
+  profile: string;
+  picture: string;
   verified: boolean;
 }

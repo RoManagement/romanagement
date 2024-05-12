@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const items = [
   {
-    title: "Posts",
+    title: "Workspaces",
     href: "/dashboard",
     icon: FileTextIcon,
   },

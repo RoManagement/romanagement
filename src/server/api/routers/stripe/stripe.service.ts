@@ -36,6 +36,27 @@ export const getStripePlans = async (ctx: ProtectedTRPCContext) => {
   }
 };
 
+export const getLandingStripePlans = async () => {
+  try {
+    const proPrice = await stripe.prices.retrieve(proPlan.stripePriceId);
+
+    return subscriptionPlans.map((plan) => {
+      return {
+        ...plan,
+        price:
+          plan.stripePriceId === proPlan.stripePriceId
+            ? formatPrice((proPrice.unit_amount ?? 0) / 100, {
+                currency: proPrice.currency,
+              })
+            : formatPrice(0 / 100, { currency: proPrice.currency }),
+      };
+    });
+  } catch (err) {
+    console.error(`Error fetching Stripe plans: ${err}`);
+    return [];
+  }
+};
+
 export const getStripePlan = async (ctx: ProtectedTRPCContext) => {
   try {
     const user = await ctx.db.query.users.findFirst({
@@ -114,6 +135,7 @@ export const manageSubscription = async (
   }
 
   // If the user is not subscribed to a plan, we create a Stripe Checkout session
+  console.log("Creating Stripe Checkout session...");
   const stripeSession = await ctx.stripe.checkout.sessions.create({
     success_url: billingUrl,
     cancel_url: billingUrl,

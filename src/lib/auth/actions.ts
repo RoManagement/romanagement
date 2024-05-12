@@ -13,9 +13,9 @@ import { lucia } from "@/lib/auth";
 import { db } from "@/server/db";
 import {
   loginSchema,
-  signupSchema,
+  setEmailSchema,
   type LoginInput,
-  type SignupInput,
+  type EmailInput,
   resetPasswordSchema,
 } from "@/lib/validators/auth";
 import { emailVerificationCodes, passwordResetTokens, users } from "@/server/db/schema";
@@ -74,7 +74,7 @@ export async function login(_: any, formData: FormData): Promise<ActionResponse<
   return redirect(Paths.Dashboard);
 }
 
-export async function signup(_: any, formData: FormData): Promise<ActionResponse<SignupInput>> {
+/* export async function signup(_: any, formData: FormData): Promise<ActionResponse<SignupInput>> {
   const obj = Object.fromEntries(formData.entries());
 
   const parsed = signupSchema.safeParse(obj);
@@ -116,7 +116,7 @@ export async function signup(_: any, formData: FormData): Promise<ActionResponse
   const sessionCookie = lucia.createSessionCookie(session.id);
   cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
   return redirect(Paths.VerifyEmail);
-}
+} */
 
 export async function logout(): Promise<{ error: string } | void> {
   const { session } = await validateRequest();
@@ -153,6 +153,42 @@ export async function resendVerificationEmail(): Promise<{
   await sendMail(user.email, EmailTemplate.EmailVerification, { code: verificationCode });
 
   return { success: true };
+}
+
+export async function setEmail(_: any, formData: FormData): Promise<ActionResponse<EmailInput>> {
+  const obj = Object.fromEntries(formData.entries());
+
+  const parsed = setEmailSchema.safeParse(obj);
+  if (!parsed.success) {
+    const err = parsed.error.flatten();
+    return {
+      fieldError: {
+        email: err.fieldErrors.email?.[0],
+      },
+    };
+  }
+
+  const { email } = parsed.data;
+
+  const { user } = await validateRequest();
+
+  if (!user) {
+    return redirect(Paths.Login);
+  }
+
+  const existingEmail = await db.query.users.findFirst({
+    where: (table, { eq }) => eq(table.email, email),
+  });
+
+  if (existingEmail) {
+    return {
+      formError: "Email is already in use",
+    };
+  }
+
+  await db.update(users).set({ email }).where(eq(users.id, user.id));
+
+  return redirect(Paths.VerifyEmail);
 }
 
 export async function verifyEmail(_: any, formData: FormData): Promise<{ error: string } | void> {

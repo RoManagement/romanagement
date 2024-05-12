@@ -4,22 +4,16 @@ import { useFormState } from "react-dom";
 import Link from "next/link";
 import { PasswordInput } from "@/components/password-input";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { DiscordLogoIcon } from "@/components/icons";
+import { SiRoblox } from "react-icons/si";
 import { APP_TITLE } from "@/lib/constants";
 import { Label } from "@/components/ui/label";
-import { signup } from "@/lib/auth/actions";
+/* import { signup } from "@/lib/auth/actions"; */
 import { SubmitButton } from "@/components/submit-button";
 
 export function Signup() {
-  const [state, formAction] = useFormState(signup, null);
+  /*   const [state, formAction] = useFormState(signup, null); */
 
   return (
     <Card className="w-full max-w-md">
@@ -29,18 +23,18 @@ export function Signup() {
       </CardHeader>
       <CardContent>
         <Button variant="outline" className="w-full" asChild>
-          <Link href="/login/discord">
-            <DiscordLogoIcon className="mr-2 h-5 w-5" />
-            Sign up with Discord
+          <Link href="/login/roblox">
+            <SiRoblox className="mr-2 h-5 w-5" />
+            Sign up with Roblox
           </Link>
         </Button>
-        <div className="my-2 flex items-center">
+        {/*        <div className="my-2 flex items-center">
           <div className="flex-grow border-t border-muted" />
           <div className="mx-2 text-muted-foreground">or</div>
           <div className="flex-grow border-t border-muted" />
         </div>
-
-        <form action={formAction} className="space-y-4">
+      
+       <form action={formAction} className="space-y-4">
           <div className="space-y-2">
             <Label>Email</Label>
             <Input
@@ -86,7 +80,7 @@ export function Signup() {
           <Button variant="outline" className="w-full" asChild>
             <Link href="/">Cancel</Link>
           </Button>
-        </form>
+        </form> */}
       </CardContent>
     </Card>
   );
