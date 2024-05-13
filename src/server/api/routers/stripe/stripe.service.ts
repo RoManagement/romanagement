@@ -146,13 +146,16 @@ export const manageSubscription = async (
     customer_email: customerEmail, // Use the non-null assertion or default to undefined
     line_items: [
       {
-        price: input.stripePriceId,
-        quantity: 1,
+      price: input.stripePriceId,
+      quantity: 1,
       },
     ],
     metadata: {
       userId: user.id,
     },
+    subscription_data: {
+      trial_end: Math.floor(Date.now() / 1000) + 2_592_000, // 30 days from now
+    }
   });
   
   return {
