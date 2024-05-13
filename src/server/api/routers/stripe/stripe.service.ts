@@ -154,7 +154,7 @@ export const manageSubscription = async (
       userId: user.id,
     },
     subscription_data: {
-      trial_end: Math.floor(Date.now() / 1000) + 2_592_000, // 30 days from now
+      trial_end: Math.floor(Date.now() / 1000) + 2_678_400, // 31 days from now
     }
   });
   

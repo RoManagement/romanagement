@@ -22,7 +22,7 @@ export default async function BillingPage() {
   const { user } = await validateRequest();
 
   if (!user) {
-    redirect("/signin");
+    redirect("/login");
   }
 
   const stripePromises = Promise.all([api.stripe.getPlans.query(), api.stripe.getPlan.query()]);

@@ -126,7 +126,7 @@ const HomePage = () => {
             <a id="pricing"></a> Pricing
           </h1>
           <p className="mb-10 text-balance text-center text-muted-foreground md:text-lg lg:text-xl">
-            Try it free for 30 days. Plans start at $5/month.
+            Try it free for 30 days. Plans start at $10/month.
           </p>
           <React.Suspense fallback={<BillingSkeleton />}>
             <Billing stripePromises={stripePromises} />

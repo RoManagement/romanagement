@@ -50,6 +50,9 @@ export async function Billing({ stripePromises }: BillingProps) {
               <div className="text-3xl font-bold">
                 {item.price}
                 <span className="text-sm font-normal text-muted-foreground">/month</span>
+                {item.name === "Pro" && (
+                    <p className="text-center text-sm text-muted-foreground">After 30 day trial</p>
+                )}
               </div>
               <div className="space-y-2">
                 {item.features.map((feature) => (
