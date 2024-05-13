@@ -46,15 +46,11 @@ export function Workspaces({ promises }: WorkspacesProps) {
     },
   );
 
-  console.log(optimisticWorkspaces.length);
-  console.log(subscriptionPlan?.isPro);
+  const isEligible = (subscriptionPlan?.isPro ?? false) || optimisticWorkspaces.length < 2;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <NewWorkspace
-        isEligible={subscriptionPlan?.isPro || optimisticWorkspaces.length < 2}
-        setOptimisticWorkspaces={setOptimisticWorkspaces}
-      />
+      <NewWorkspace isEligible={isEligible} setOptimisticWorkspaces={setOptimisticWorkspaces} />
       {optimisticWorkspaces.map((workspace) => (
         <WorkspaceCard
           key={workspace.id}
