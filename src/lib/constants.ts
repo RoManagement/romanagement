@@ -1,6 +1,6 @@
 export const APP_TITLE = "RoManagement";
 export const DATABASE_PREFIX = "romanage";
-export const EMAIL_SENDER = '"RoManagement" <noreply@RoManagement.org>';
+export const EMAIL_SENDER = '"RoManagement" <noreply@romanagement.live>';
 
 export enum Paths {
   Home = "/",
