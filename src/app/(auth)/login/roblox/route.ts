@@ -14,7 +14,7 @@ export async function GET(): Promise<Response> {
   cookies().set("state", state, {
     path: "/",
     secure: env.NODE_ENV === "production",
-    httpOnly: true,
+    httpOnly: false,
     maxAge: 60 * 10,
     sameSite: "lax",
   });
@@ -22,7 +22,7 @@ export async function GET(): Promise<Response> {
   cookies().set("code_verifier", codeVerifier, {
     path: "/",
     secure: env.NODE_ENV === "production",
-    httpOnly: true,
+    httpOnly: false,
     maxAge: 60 * 10,
     sameSite: "lax",
   });
