@@ -134,6 +134,8 @@ export const manageSubscription = async (
     };
   }
 
+  const customerEmail = user.email ?? undefined;
+
   // If the user is not subscribed to a plan, we create a Stripe Checkout session
   const stripeSession = await ctx.stripe.checkout.sessions.create({
     success_url: billingUrl,
@@ -141,7 +143,7 @@ export const manageSubscription = async (
     payment_method_types: ["card"],
     mode: "subscription",
     billing_address_collection: "auto",
-    customer_email: user.email,
+    customer_email: customerEmail, // Use the non-null assertion or default to undefined
     line_items: [
       {
         price: input.stripePriceId,
@@ -152,7 +154,7 @@ export const manageSubscription = async (
       userId: user.id,
     },
   });
-
+  
   return {
     url: stripeSession.url,
   };
