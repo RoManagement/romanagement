@@ -105,5 +105,53 @@ export const postRelations = relations(posts, ({ one }) => ({
   }),
 }));
 
+export const workspaces = pgTable(
+  "workspaces",
+  {
+    id: varchar("id", { length: 255 }).primaryKey().unique(),
+    name: varchar("name", { length: 255 }),
+    ownerId: varchar("owner_id", { length: 255 }), // Assuming ownerId is a reference to a user id
+    robloxGroupId: varchar("roblox_group_id", { length: 255 }),
+    logo: varchar("logo", { length: 255 }),
+    apiKey: varchar("api_key", { length: 255 }).unique(),
+    robloxCookie: varchar("roblox_cookie", { length: 255 }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
+  },
+  (t) => ({
+    ownerIdIdx: index("workspace_owner_id_idx").on(t.ownerId),
+  }),
+)
+
+export const workspaceUsers = pgTable(
+  "workspace_users",
+  {
+    id: varchar("id", { length: 255 }).primaryKey(),
+    userId: varchar("user_id", { length: 255 }).notNull(), // Assuming userId is a reference to a user id
+    role: varchar("role", { length: 25 }).default("Member"),
+    workspaceId: varchar("workspace_id", { length: 255 }).notNull(), // Assuming workspaceId is a reference to a workspace id
+  },
+  (t) => ({
+    userWorkspaceIdx: index("user_workspace_idx").on(t.userId, t.workspaceId),
+  }),
+);
+
+export const workspaceRelations = relations(workspaces, ({ many }) => ({
+  workspaceUsers: many(workspaceUsers)
+}));
+
+export const workspaceUserRelations = relations(workspaceUsers, ({ one }) => ({
+  user: one(users, {
+    fields: [workspaceUsers.userId],
+    references: [users.id],
+  }),
+  workspace: one(workspaces, {
+    fields: [workspaceUsers.workspaceId],
+    references: [workspaces.id],
+  }),
+}));
+
 export type Post = typeof posts.$inferSelect;
 export type NewPost = typeof posts.$inferInsert;
+export type Workspace = typeof workspaces.$inferSelect;
+export type NewWorkspace = typeof workspaces.$inferInsert;
