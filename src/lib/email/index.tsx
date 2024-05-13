@@ -55,12 +55,10 @@ export const sendMail = async <T extends EmailTemplate>(
   template: T,
   props: PropsMap[NoInfer<T>],
 ) => {
-  if (env.NODE_ENV !== "production") {
-    console.log("📨 Email sent to:", to, "with template:", template, "and props:", props);
-    return;
-  }
 
   const { subject, body } = getEmailTemplate(template, props);
+
+  console.log("📨 Email sent to:", to, "with template:", template, "and props:", props);
 
   return transporter.sendMail({ from: EMAIL_SENDER, to, subject, html: body });
 };
