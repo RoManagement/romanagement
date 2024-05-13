@@ -6,7 +6,9 @@ import { NewWorkspace } from "./new-workspace";
 import { WorkspaceCard } from "./workspace-card";
 
 interface WorkspacesProps {
-  promises: Promise<[RouterOutputs["workspace"]["myWorkspaces"], RouterOutputs["stripe"]["getPlan"]]>;
+  promises: Promise<
+    [RouterOutputs["workspace"]["myWorkspaces"], RouterOutputs["stripe"]["getPlan"]]
+  >;
 }
 
 export function Workspaces({ promises }: WorkspacesProps) {
@@ -44,14 +46,21 @@ export function Workspaces({ promises }: WorkspacesProps) {
     },
   );
 
+  console.log(optimisticWorkspaces.length);
+  console.log(subscriptionPlan?.isPro);
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <NewWorkspace
-        isEligible={(optimisticWorkspaces.length < 2 ?? subscriptionPlan?.isPro) ?? false}
+        isEligible={subscriptionPlan?.isPro || optimisticWorkspaces.length < 2}
         setOptimisticWorkspaces={setOptimisticWorkspaces}
       />
       {optimisticWorkspaces.map((workspace) => (
-        <WorkspaceCard key={workspace.id} workspace={workspace} setOptimisticWorkspaces={setOptimisticWorkspaces} />
+        <WorkspaceCard
+          key={workspace.id}
+          workspace={workspace}
+          setOptimisticWorkspaces={setOptimisticWorkspaces}
+        />
       ))}
     </div>
   );
