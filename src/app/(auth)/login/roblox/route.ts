@@ -12,19 +12,17 @@ export async function GET(): Promise<Response> {
   });
 
   cookies().set("state", state, {
+    secure: true, // set to false in localhost
     path: "/",
-    secure: env.NODE_ENV === "production",
     httpOnly: true,
-    maxAge: 60 * 10,
-    sameSite: "lax",
+    maxAge: 60 * 10, // 10 min
   });
 
   cookies().set("code_verifier", codeVerifier, {
+    secure: true, // set to false in localhost
     path: "/",
-    secure: env.NODE_ENV === "production",
     httpOnly: true,
-    maxAge: 60 * 10,
-    sameSite: "lax",
+    maxAge: 60 * 10, // 10 min
   });
 
   return Response.redirect(url);
