@@ -149,8 +149,8 @@ export async function resendVerificationEmail(): Promise<{
       error: `Please wait ${timeFromNow(lastSent.expiresAt)} before resending`,
     };
   }
-  const verificationCode = await generateEmailVerificationCode(user.id, user.email);
-  await sendMail(user.email, EmailTemplate.EmailVerification, { code: verificationCode });
+  const verificationCode = await generateEmailVerificationCode(user.id, user.email ?? "");
+  await sendMail(user.email ?? "", EmailTemplate.EmailVerification, { code: verificationCode });
 
   return { success: true };
 }
@@ -245,7 +245,7 @@ export async function sendPasswordResetLink(
 
     const verificationLink = `${env.NEXT_PUBLIC_APP_URL}/reset-password/${verificationToken}`;
 
-    await sendMail(user.email, EmailTemplate.PasswordReset, { link: verificationLink });
+    await sendMail(user.email ?? "", EmailTemplate.PasswordReset, { link: verificationLink });
 
     return { success: true };
   } catch (error) {
