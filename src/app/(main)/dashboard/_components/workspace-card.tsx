@@ -36,7 +36,7 @@ export const WorkspaceCard = async ({
     <Card>
       <CardHeader>
         <CardTitle className="line-clamp-2 text-base">
-          <img src={workspace.logo || ''} alt={workspace.name || ''} className="w-[45px] h-[45px] mb-2" />
+          <img src={workspace.logo ?? ''} alt={workspace.name ?? ''} className="w-[45px] h-[45px] mb-2" />
           {workspace.name}
         </CardTitle>
       </CardHeader>
