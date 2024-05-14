@@ -1,0 +1,1 @@
+ALTER TABLE "romanage_workspaces" ALTER COLUMN "status" SET DEFAULT 'Active';

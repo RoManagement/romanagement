@@ -14,19 +14,116 @@ import { db } from "@/server/db";
 import {
   loginSchema,
   setEmailSchema,
+  createWorkspaceSchema,
+  type CreateWorkspaceInput,
   type LoginInput,
   type EmailInput,
   resetPasswordSchema,
 } from "@/lib/validators/auth";
-import { emailVerificationCodes, passwordResetTokens, users } from "@/server/db/schema";
+import { emailVerificationCodes, passwordResetTokens, users, workspaces, workspaceUsers } from "@/server/db/schema";
 import { sendMail, EmailTemplate } from "@/lib/email";
 import { validateRequest } from "@/lib/auth/validate-request";
 import { Paths } from "../constants";
 import { env } from "@/env";
+import { getGroupInfo, getGroupLogo } from "../roblox/utils";
 
 export interface ActionResponse<T> {
   fieldError?: Partial<Record<keyof T, string | undefined>>;
   formError?: string;
+  success?: boolean;
+}
+
+export async function createWorkspace(_: any, isEligible: any, formData: FormData): Promise<ActionResponse<CreateWorkspaceInput>> {
+  const { user } = await validateRequest();
+
+  if (!user) {
+    return redirect(Paths.Login);
+  }
+
+  if (!isEligible) {
+    return {
+      formError: "You've reached the limit of workspaces for your current plan! Please upgrade to create more workspaces",
+    };
+  }
+
+  const obj = Object.fromEntries(formData.entries());
+
+  const parsed = createWorkspaceSchema.safeParse(obj);
+  if (!parsed.success) {
+    const err = parsed.error.flatten();
+    return {
+      fieldError: {
+        groupId: err.fieldErrors.groupId?.[0],
+      },
+    };
+  }
+
+  const { groupId } = parsed.data;
+
+  const groupData = await getGroupInfo(groupId);
+  const groupLogo = await getGroupLogo(groupId);
+
+  if (groupData === null) {
+    return {
+      formError: "Failed to load group data",
+      success: false,
+    };
+  }
+
+  if (groupData.owner.id.toString() !== user.robloxId?.toString()) {
+    return {
+      formError: "You must be the owner of the group to create a workspace",
+      success: false,
+    };
+  }
+
+  const existingWorkspace = await db.query.workspaces.findFirst({
+    where: (table, { eq}) => eq(table.robloxGroupId, groupId),
+  })
+
+  if (existingWorkspace) {
+    return {
+      formError: "Workspace already exists",
+      success: false,
+    };
+  }
+
+  const workspaceId = generateId(15);
+
+  const workspace = await db.insert(workspaces).values({
+    id: workspaceId,
+    name: groupData.name,
+    ownerId: user.id,
+    robloxGroupId: groupId,
+    logo: groupLogo,
+    apiKey: generateId(25),
+    robloxCookie: "",
+  })
+
+  if (!workspace) {
+    return {
+      formError: "Failed to create workspace",
+      success: false,
+    };
+  }
+
+  const workspaceUser = await db.insert(workspaceUsers).values({
+    id: generateId(20),
+    userId: user.id,
+    workspaceId,
+    role: "Owner",
+  })
+
+  if (!workspaceUser) {
+    return {
+      formError: "Failed to create workspace",
+      success: false,
+    };
+  }
+
+  return {
+    success: true,
+  };
 }
 
 export async function login(_: any, formData: FormData): Promise<ActionResponse<LoginInput>> {

@@ -24,6 +24,7 @@ export const lucia = new Lucia(adapter, {
       avatar: attributes.avatar,
       createdAt: attributes.createdAt,
       updatedAt: attributes.updatedAt,
+      robloxId: attributes.robloxId,
     };
   },
   sessionExpiresIn: new TimeSpan(30, "d"),

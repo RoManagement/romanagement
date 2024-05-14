@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getGroupInfo } from "@/lib/roblox/utils";
 import { api } from "@/trpc/react";
 import { type RouterOutputs } from "@/trpc/shared";
 import Link from "next/link";
@@ -27,36 +28,27 @@ interface WorkspaceCardProps {
   }) => void;
 }
 
-export const WorkspaceCard = ({
+export const WorkspaceCard = async ({
   workspace,
-  userName,
-  setOptimisticWorkspaces,
 }: WorkspaceCardProps) => {
-  const router = useRouter();
-  const workspaceMutation = api.workspace.delete.useMutation();
-  const [isDeletePending, startDeleteTransition] = React.useTransition();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="line-clamp-2 text-base">{workspace.name}</CardTitle>
-        <CardDescription className="line-clamp-1 text-sm">
-          {userName ? <span>{userName} at</span> : null}
-          {new Date(workspace.createdAt.toJSON()).toLocaleString(undefined, {
-            dateStyle: "medium",
-            timeStyle: "short",
-          })}
-        </CardDescription>
+        <CardTitle className="line-clamp-2 text-base">
+          <img src={workspace.logo || ''} alt={workspace.name || ''} className="w-[45px] h-[45px] mb-2" />
+          {workspace.name}
+        </CardTitle>
       </CardHeader>
-      <CardContent className="line-clamp-3 text-sm">{workspace.robloxGroupId}</CardContent>
       <CardFooter className="flex-row-reverse gap-2">
         <Button variant="secondary" size="sm" asChild>
-          <Link href={`/editor/${workspace.id}`}>
+          <Link href={`/workspace/${workspace.id}`}>
             <Pencil2Icon className="mr-1 h-4 w-4" />
-            <span>Edit</span>
+            <span>Open</span>
           </Link>
         </Button>
-        <Button
+        {/* Delete Button */}
+        {/* <Button
           variant="secondary"
           size="icon"
           className="h-8 w-8 text-destructive"
@@ -86,10 +78,12 @@ export const WorkspaceCard = ({
         >
           <TrashIcon className="h-5 w-5" />
           <span className="sr-only">Delete</span>
-        </Button>
+        </Button> */}
+
         <Badge variant="outline" className="mr-auto rounded-lg capitalize">
-          {workspace.id}
+          <span className={workspace.status === 'Active' ? 'text-green-500' : 'text-red-500'}>{workspace.status}</span>
         </Badge>
+
       </CardFooter>
     </Card>
   );

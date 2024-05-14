@@ -1,0 +1,1 @@
+ALTER TABLE "romanage_workspaces" ADD COLUMN "status" varchar(25) DEFAULT 'active' NOT NULL;

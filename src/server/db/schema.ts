@@ -117,6 +117,7 @@ export const workspaces = pgTable(
     robloxCookie: varchar("roblox_cookie", { length: 255 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
+    status: varchar("status", { length: 25, enum: ["Active", "Inactive"] }).default("Active").notNull(),
   },
   (t) => ({
     ownerIdIdx: index("workspace_owner_id_idx").on(t.ownerId),

@@ -22,6 +22,20 @@
       "when": 1715633831518,
       "tag": "0002_strong_zaran",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1715648938797,
+      "tag": "0003_striped_morlun",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1715649016679,
+      "tag": "0004_solid_nitro",
+      "breakpoints": true
     }
   ]
 }

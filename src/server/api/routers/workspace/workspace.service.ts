@@ -39,6 +39,7 @@ export const getWorkspaces = async (ctx: ProtectedTRPCContext, { id }: GetWorksp
       apiKey: true,
       createdAt: true,
       updatedAt: true,
+      ownerId: true,
     },
   });
 };
@@ -129,6 +130,8 @@ export const myWorkspaces = async (ctx: ProtectedTRPCContext, input: MyWorkspace
         apiKey: true,
         createdAt: true,
         updatedAt: true,
+        status: true,
+        ownerId: true,
       },
     });
 

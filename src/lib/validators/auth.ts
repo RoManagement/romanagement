@@ -11,6 +11,11 @@ export const setEmailSchema = z.object({
 });
 export type EmailInput = z.infer<typeof signupSchema>;
 
+export const createWorkspaceSchema = z.object({
+  groupId: z.string().min(2, { message: "Group ID is required!" }),
+});
+export type CreateWorkspaceInput = z.infer<typeof createWorkspaceSchema>;
+
 export const loginSchema = z.object({
   email: z.string().email("Please enter a valid email."),
   password: z
