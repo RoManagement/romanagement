@@ -10,7 +10,7 @@ export interface SubscriptionPlan {
 export const freePlan: SubscriptionPlan = {
   name: "Free",
   description: "The free plan is limited to 5 workspaces.",
-  features: ["Up to 3 workspaces", "Limited support", "Limited API requests per month", "Unlimited Workspace Users", "Staff Management"],
+  features: ["Up to 5 workspaces", "Limited support", "Limited API requests per month", "Unlimited Workspace Users", "Staff Management"],
   stripePriceId: "",
 };
 

@@ -26,11 +26,37 @@ import { validateRequest } from "@/lib/auth/validate-request";
 import { Paths } from "../constants";
 import { env } from "@/env";
 import { getGroupInfo, getGroupLogo } from "../roblox/utils";
+import { group } from "console";
 
 export interface ActionResponse<T> {
   fieldError?: Partial<Record<keyof T, string | undefined>>;
   formError?: string;
-  success?: boolean;
+  success?: string;
+}
+
+export async function reactivateWorkspace(workspaceId: string, isEligible: boolean): Promise<void> {
+  const { user } = await validateRequest();
+  if (!user) {
+    throw new Error("User not authenticated"); // Change this line
+  }
+
+  if (!isEligible) {
+    throw new Error("You've reached the limit of workspaces for your current plan! Please upgrade to create more workspaces, or deactivate some."); // Change this line
+  }
+
+  const workspace = await db.query.workspaces.findFirst({
+    where: (table, { eq }) => eq(table.id, workspaceId),
+  });
+
+  if (!workspace) {
+    throw new Error("Workspace not found"); // Change this line
+  }
+
+  if (workspace.ownerId !== user.id) {
+    throw new Error("You do not have permission to reactivate this workspace"); // Change this line
+  }
+
+  await db.update(workspaces).set({ status: "Active" }).where(eq(workspaces.id, workspaceId));
 }
 
 export async function createWorkspace(_: any, isEligible: any, formData: FormData): Promise<ActionResponse<CreateWorkspaceInput>> {
@@ -65,15 +91,18 @@ export async function createWorkspace(_: any, isEligible: any, formData: FormDat
 
   if (groupData === null) {
     return {
-      formError: "Failed to load group data",
-      success: false,
+      formError: "Failed to load group data, please make sure you're using the correct group ID.",
+    };
+  }
+  if (groupLogo === null) {
+    return {
+      formError: "Failed to load group data, please make sure you're using the correct group ID.",
     };
   }
 
   if (groupData.owner.id.toString() !== user.robloxId?.toString()) {
     return {
       formError: "You must be the owner of the group to create a workspace",
-      success: false,
     };
   }
 
@@ -84,7 +113,6 @@ export async function createWorkspace(_: any, isEligible: any, formData: FormDat
   if (existingWorkspace) {
     return {
       formError: "Workspace already exists",
-      success: false,
     };
   }
 
@@ -103,7 +131,6 @@ export async function createWorkspace(_: any, isEligible: any, formData: FormDat
   if (!workspace) {
     return {
       formError: "Failed to create workspace",
-      success: false,
     };
   }
 
@@ -117,12 +144,11 @@ export async function createWorkspace(_: any, isEligible: any, formData: FormDat
   if (!workspaceUser) {
     return {
       formError: "Failed to create workspace",
-      success: false,
     };
   }
 
   return {
-    success: true,
+    success: "Workspace created successfully! You may close this dialog now.",
   };
 }
 

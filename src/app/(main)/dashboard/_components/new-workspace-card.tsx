@@ -21,9 +21,9 @@ interface NewWorkspaceProps {
   isEligible: boolean;
 }
 
-export const NewWorkspaceCard = ({isEligible}: NewWorkspaceProps) => {
+export const NewWorkspaceCard = ({ isEligible }: NewWorkspaceProps) => {
   const [open, setOpen] = useState(false);
-  
+
   const handleFormAction = async (state: any, payload: any) => {
     // Assuming payload is FormData; adjust as necessary
     return createWorkspace(state, isEligible, payload);
@@ -75,7 +75,7 @@ export const NewWorkspaceCard = ({isEligible}: NewWorkspaceProps) => {
             </p>
           ) : state?.success ? (
             <p className="rounded-lg border p-2 text-[0.8rem] font-medium">
-              Workspace created successfully!
+              {state?.success}
             </p>
           ) : null}
 

@@ -46,7 +46,7 @@ export function Workspaces({ promises }: WorkspacesProps) {
     },
   );
 
-  const isEligible = (subscriptionPlan?.isPro ?? false) || optimisticWorkspaces.length < 2;
+  const isEligible = (subscriptionPlan?.isPro ?? false) || optimisticWorkspaces.length < 5;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

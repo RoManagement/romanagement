@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { toast } from "sonner";
+import { ReactivateButton } from "./reactivate-button";
 
 interface WorkspaceCardProps {
   workspace: RouterOutputs["workspace"]["myWorkspaces"][number];
@@ -28,25 +29,30 @@ interface WorkspaceCardProps {
   }) => void;
 }
 
-export const WorkspaceCard = async ({
-  workspace,
-}: WorkspaceCardProps) => {
-
+export const WorkspaceCard = async ({ workspace }: WorkspaceCardProps) => {
   return (
     <Card>
       <CardHeader>
         <CardTitle className="line-clamp-2 text-base">
-          <img src={workspace.logo ?? ''} alt={workspace.name ?? ''} className="w-[45px] h-[45px] mb-2" />
+          <img
+            src={workspace.logo ?? ""}
+            alt={workspace.name ?? ""}
+            className="mb-2 h-[45px] w-[45px]"
+          />
           {workspace.name}
         </CardTitle>
       </CardHeader>
       <CardFooter className="flex-row-reverse gap-2">
-        <Button variant="secondary" size="sm" asChild>
-          <Link href={`/workspace/${workspace.id}`}>
-            <Pencil2Icon className="mr-1 h-4 w-4" />
-            <span>Open</span>
-          </Link>
-        </Button>
+        {workspace.status === "Inactive" ? (
+          <ReactivateButton workspaceId={workspace.id} />
+        ) : (
+          <Button variant="secondary" size="sm" asChild>
+            <Link href={`/workspace/${workspace.id}`}>
+              <Pencil2Icon className="mr-1 h-4 w-4" />
+              <span>Open</span>
+            </Link>
+          </Button>
+        )}
         {/* Delete Button */}
         {/* <Button
           variant="secondary"
@@ -81,9 +87,10 @@ export const WorkspaceCard = async ({
         </Button> */}
 
         <Badge variant="outline" className="mr-auto rounded-lg capitalize">
-          <span className={workspace.status === 'Active' ? 'text-green-500' : 'text-red-500'}>{workspace.status}</span>
+          <span className={workspace.status === "Active" ? "text-green-500" : "text-red-500"}>
+            {workspace.status}
+          </span>
         </Badge>
-
       </CardFooter>
     </Card>
   );
