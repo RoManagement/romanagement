@@ -1,4 +1,4 @@
-import { ExclamationTriangleIcon, FilePlusIcon } from "@/components/icons";
+import { CheckCircledIcon, ExclamationTriangleIcon, FilePlusIcon } from "@/components/icons";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -8,7 +8,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { useState } from "react";
+import { Key, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -16,20 +16,40 @@ import { SubmitButton } from "@/components/submit-button";
 import { LoadingButton } from "@/components/loading-button";
 import { useFormState } from "react-dom";
 import { createWorkspace } from "@/lib/auth/actions";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from 'react';
 
 interface NewWorkspaceProps {
   isEligible: boolean;
 }
 
 export const NewWorkspaceCard = ({ isEligible }: NewWorkspaceProps) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  const handleFormAction = async (state: any, payload: any) => {
-    // Assuming payload is FormData; adjust as necessary
-    return createWorkspace(state, isEligible, payload);
+const handleFormAction = async (state: any, payload: any) => {
+    // Step 2: Capture the workspaceId from the createWorkspace function
+    const result = await createWorkspace(state, isEligible, payload);
+    if (result?.workspaceId) {
+      return { ...state, success: true, workspaceId: result.workspaceId };
+    }
+    return { ...state, success: false };
   };
 
   const [state, formAction] = useFormState(handleFormAction, null);
+
+  useEffect(() => {
+    // Step 3: Use the workspaceId from state for routing
+    if (state?.success && state.workspaceId) {
+      toast("Workspace created successfully. Workspace ID: " + state.workspaceId, {
+        icon: <CheckCircledIcon className="h-4 w-4" />,
+      });
+      router.refresh();
+      setTimeout(() => {
+        router.push(`/workspace/${state.workspaceId}`);
+      }, 100);
+    }
+  }, [state, router]);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -64,18 +84,14 @@ export const NewWorkspaceCard = ({ isEligible }: NewWorkspaceProps) => {
           {state?.fieldError ? (
             <ul className="list-disc space-y-1 rounded-lg border bg-destructive/10 p-2 text-[0.8rem] font-medium text-destructive">
               {Object.values(state.fieldError).map((err) => (
-                <li className="ml-4" key={err}>
-                  {err}
+                <li className="ml-4" key={err as Key}>
+                  {err as React.ReactNode}
                 </li>
               ))}
             </ul>
           ) : state?.formError ? (
             <p className="rounded-lg border bg-destructive/10 p-2 text-[0.8rem] font-medium text-destructive">
               {state?.formError}
-            </p>
-          ) : state?.success ? (
-            <p className="rounded-lg border p-2 text-[0.8rem] font-medium">
-              {state?.success}
             </p>
           ) : null}
 

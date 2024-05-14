@@ -50,11 +50,12 @@ export function Workspaces({ promises }: WorkspacesProps) {
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <NewWorkspace isEligible={isEligible} setOptimisticWorkspaces={setOptimisticWorkspaces} />
+      <NewWorkspace isEligible={isEligible} />
       {optimisticWorkspaces.map((workspace) => (
         <WorkspaceCard
           key={workspace.id}
           workspace={workspace}
+          isEligible={isEligible}
           setOptimisticWorkspaces={setOptimisticWorkspaces}
         />
       ))}

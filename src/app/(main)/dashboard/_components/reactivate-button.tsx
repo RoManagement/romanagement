@@ -17,22 +17,29 @@ import { toast } from "sonner";
 import { ExclamationTriangleIcon, CheckCircledIcon } from "@/components/icons";
 import { reactivateWorkspace } from "@/lib/auth/actions";
 import { LoadingButton } from "@/components/loading-button";
+import { useRouter } from "next/navigation";
 
 interface Props {
+  isEligible: boolean;
   workspaceId: string;
 }
 
-export const ReactivateButton = ({ workspaceId }: Props) => {
+export const ReactivateButton = ({ workspaceId, isEligible }: Props) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleReactivation = async () => {
     setIsLoading(true);
     try {
-      await reactivateWorkspace(workspaceId, true);
+      await reactivateWorkspace(workspaceId, isEligible);
       toast("Reactivated Workspace Successfully. Workspace ID: " + workspaceId, {
         icon: <CheckCircledIcon className="h-4 w-4" />,
       });
+      router.refresh();
+      setTimeout(() => {
+        router.push(`/workspace/${workspaceId}`);
+      }, 100);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);

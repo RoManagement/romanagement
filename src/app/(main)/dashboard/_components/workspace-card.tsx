@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { ReactivateButton } from "./reactivate-button";
 
 interface WorkspaceCardProps {
+  isEligible: boolean;
   workspace: RouterOutputs["workspace"]["myWorkspaces"][number];
   userName?: string;
   setOptimisticWorkspaces: (action: {
@@ -29,7 +30,7 @@ interface WorkspaceCardProps {
   }) => void;
 }
 
-export const WorkspaceCard = async ({ workspace }: WorkspaceCardProps) => {
+export const WorkspaceCard = async ({ workspace, isEligible }: WorkspaceCardProps) => {
   return (
     <Card>
       <CardHeader>
@@ -44,7 +45,7 @@ export const WorkspaceCard = async ({ workspace }: WorkspaceCardProps) => {
       </CardHeader>
       <CardFooter className="flex-row-reverse gap-2">
         {workspace.status === "Inactive" ? (
-          <ReactivateButton workspaceId={workspace.id} />
+          <ReactivateButton workspaceId={workspace.id} isEligible={isEligible} />
         ) : (
           <Button variant="secondary" size="sm" asChild>
             <Link href={`/workspace/${workspace.id}`}>

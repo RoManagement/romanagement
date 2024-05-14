@@ -32,6 +32,7 @@ export interface ActionResponse<T> {
   fieldError?: Partial<Record<keyof T, string | undefined>>;
   formError?: string;
   success?: string;
+  workspaceId?: string;
 }
 
 export async function reactivateWorkspace(workspaceId: string, isEligible: boolean): Promise<void> {
@@ -149,6 +150,7 @@ export async function createWorkspace(_: any, isEligible: any, formData: FormDat
 
   return {
     success: "Workspace created successfully! You may close this dialog now.",
+    workspaceId: workspaceId, // Include the workspaceId in the success response
   };
 }
 
