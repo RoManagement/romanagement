@@ -31,7 +31,7 @@ export async function Billing({ stripePromises }: BillingProps) {
           <h3 className="text-lg font-semibold sm:text-xl">{plan?.name ?? "Free"} plan</h3>
           <p className="text-sm text-muted-foreground">
             {!plan?.isPro
-              ? "The free plan is limited to 5 workspaces. Upgrade to the Pro plan to unlock unlimited workspaces."
+              ? "The free plan is limited to 5 workspaces. Upgrade to the Pro plan to unlock unlimited workspaces. Please note if you cancel your plan, your workspaces will deactivate and you will only be able to activate 5 workspaces again. Deactivated Workspace data will not be deleted unless requested."
               : plan.isCanceled
                 ? "Your plan will be canceled on "
                 : "Your plan renews on "}
