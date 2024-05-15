@@ -40,6 +40,7 @@ export const getWorkspaces = async (ctx: ProtectedTRPCContext, { id }: GetWorksp
       createdAt: true,
       updatedAt: true,
       ownerId: true,
+      status: true,
     },
   });
 };

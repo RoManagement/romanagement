@@ -31,7 +31,7 @@ export async function Billing({ stripePromises }: BillingProps) {
           <h3 className="text-lg font-semibold sm:text-xl">{plan?.name ?? "Free"} plan</h3>
           <p className="text-sm text-muted-foreground">
             {!plan?.isPro
-              ? "The free plan is limited to 2 posts. Upgrade to the Pro plan to unlock unlimited posts."
+              ? "The free plan is limited to 5 workspaces. Upgrade to the Pro plan to unlock unlimited workspaces."
               : plan.isCanceled
                 ? "Your plan will be canceled on "
                 : "Your plan renews on "}

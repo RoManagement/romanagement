@@ -13,7 +13,8 @@ export const Footer = () => {
           <a className="underline underline-offset-4" href={twitterUrl}>
             EvanDevvv
           </a>
-          .
+          {" - "}
+          <a>SaasyKits</a>
         </p>
         <div className="ml-auto">
           <ThemeToggle />
