@@ -37,7 +37,7 @@ export const UserDropdown = ({
   email: string;
   avatar?: string | null;
   className?: string;
-  isAdmin: boolean | false;
+  isAdmin: boolean | null;
 }) => {
 
   return (
