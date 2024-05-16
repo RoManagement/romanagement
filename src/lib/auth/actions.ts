@@ -58,7 +58,7 @@ export async function deleteAccount(_: any, formData: FormData): Promise<ActionR
 
   if (stripePlan?.isPro === true) {
     return {
-      formError: "You must downgrade your plan before deleting your account",
+      formError: "You must downgrade your plan before deleting your account. If you have already cancelled your subscription, please wait until the end of the billing period. If you have any issues, please contact support.",
     };
   }
 

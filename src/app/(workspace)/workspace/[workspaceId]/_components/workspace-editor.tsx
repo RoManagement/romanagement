@@ -25,7 +25,20 @@ import { createPostSchema } from "@/server/api/routers/post/post.input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Bell, Home, LineChart, Users, ClipboardMinus, ArrowLeft, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import React, { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { WorkspaceSettings } from "./workspace-settings";
+import { WorkspaceAnnouncements } from "./workspace-announcements";
+import { WorkspaceDocumentation } from "./workspace-documentation";
+import { WorkspaceDashboard } from "./workspace-dashboard";
 
 const markdownlink = "https://remarkjs.github.io/react-markdown/";
 
@@ -35,19 +48,37 @@ interface Props {
 
 export const WorkspaceEditor = ({ workspace }: Props) => {
   if (!workspace) return null;
-  const formRef = useRef<HTMLFormElement>(null);
-  const updatePost = api.post.update.useMutation();
-  const form = useForm({
-    defaultValues: {
-      title: workspace.name,
-      excerpt: workspace.robloxGroupId,
-      content: workspace.apiKey,
-    },
-    resolver: zodResolver(createPostSchema),
-  });
-  /*   const onSubmit = form.handleSubmit(async (values) => {
-    updateWorkspaces.mutate({ id: workspace.id, ...values });
-  }); */
+
+  const [activeSection, setActiveSection] = useState("dashboard");
+
+  // Function to handle section change
+  const handleSectionChange = (section: string) => {
+    setActiveSection(section);
+  };
+
+  const isButtonActive = (section: string) => {
+    return section === activeSection ? "bg-muted" : "";
+  };
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case "dashboard":
+        return <WorkspaceDashboard />;
+      case "announcements":
+        return <WorkspaceAnnouncements />;
+      case "documentation":
+        return <WorkspaceDocumentation />;
+      case "workspace-members":
+        return <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6"></main>;
+      case "analytics":
+        return <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">Hello!</main>;
+      case "workspace-settings":
+        return <WorkspaceSettings />;
+      // Add more cases for other sections as needed
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -68,42 +99,60 @@ export const WorkspaceEditor = ({ workspace }: Props) => {
               <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
                 <Link
                   href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  onClick={() => handleSectionChange("dashboard")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isButtonActive(
+                    "dashboard",
+                  )}`}
                 >
                   <Home className="h-4 w-4" />
                   Workspace Dashboard
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  onClick={() => handleSectionChange("announcements")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isButtonActive(
+                    "announcements",
+                  )}`}
                 >
                   <Bell className="h-4 w-4" />
                   Announcements
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  onClick={() => handleSectionChange("documentation")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isButtonActive(
+                    "documentation",
+                  )}`}
                 >
                   <ClipboardMinus className="h-4 w-4" />
                   Documentation
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  onClick={() => handleSectionChange("workspace-members")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isButtonActive(
+                    "workspace-members",
+                  )}`}
                 >
                   <Users className="h-4 w-4" />
                   Workspace Members
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  onClick={() => handleSectionChange("analytics")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isButtonActive(
+                    "analytics",
+                  )}`}
                 >
                   <LineChart className="h-4 w-4" />
                   Analytics
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  onClick={() => handleSectionChange("workspace-settings")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${isButtonActive(
+                    "workspace-settings",
+                  )}`}
                 >
                   <Settings className="h-4 w-4" />
                   Workspace Settings
@@ -135,23 +184,10 @@ export const WorkspaceEditor = ({ workspace }: Props) => {
             </div>
           </div>
         </div>
+        {/* Main content */}
         <div className="flex flex-col">
-          <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-            <div className="flex items-center justify-center">
-              <h1 className="text-lg font-semibold md:text-2xl">Documentation</h1>
-            </div>
-            <div
-              className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
-              x-chunk="dashboard-02-chunk-1"
-            >
-              <div className="flex flex-col items-center gap-1 text-center">
-                <h3 className="text-2xl font-bold tracking-tight">
-                  You have no documentation added
-                </h3>
-                <Button className="mt-4">Add Documentation</Button>
-              </div>
-            </div>
-          </main>
+          {/* Conditionally render different sections */}
+          {renderSection()}
         </div>
       </div>
     </>
