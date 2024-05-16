@@ -418,6 +418,7 @@ export async function setEmail(_: any, formData: FormData): Promise<ActionRespon
 
   await db.update(users).set({ email, emailVerified: false }).where(eq(users.id, user.id));
 
+  await resendVerificationEmail();
   return redirect(Paths.VerifyEmail);
 }
 
