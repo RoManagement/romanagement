@@ -32,11 +32,14 @@ export const UserDropdown = ({
   email,
   avatar,
   className,
+  isAdmin,
 }: {
   email: string;
   avatar?: string | null;
   className?: string;
+  isAdmin: boolean | false;
 }) => {
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={className}>
@@ -50,29 +53,23 @@ export const UserDropdown = ({
         ></img>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel className="text-muted-foreground">
-          {email}
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="text-muted-foreground">{email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem
-            className="cursor-pointer text-muted-foreground"
-            asChild
-          >
+          <DropdownMenuItem className="cursor-pointer text-muted-foreground" asChild>
             <Link href="/dashboard">Dashboard</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="cursor-pointer text-muted-foreground"
-            asChild
-          >
+          <DropdownMenuItem className="cursor-pointer text-muted-foreground" asChild>
             <Link href="/dashboard/billing">Billing</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="cursor-pointer text-muted-foreground"
-            asChild
-          >
+          <DropdownMenuItem className="cursor-pointer text-muted-foreground" asChild>
             <Link href="/dashboard/settings">Settings</Link>
           </DropdownMenuItem>
+          {isAdmin === true && isAdmin !== null && (
+            <DropdownMenuItem className="cursor-pointer text-muted-foreground" asChild>
+              <Link href="/dashboard/admin">Admin</Link>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
@@ -96,9 +93,7 @@ const SignoutConfirmation = () => {
     } catch (error) {
       if (error instanceof Error) {
         toast(error.message, {
-          icon: (
-            <ExclamationTriangleIcon className="h-4 w-4 text-destructive" />
-          ),
+          icon: <ExclamationTriangleIcon className="h-4 w-4 text-destructive" />,
         });
       }
     } finally {
@@ -117,12 +112,8 @@ const SignoutConfirmation = () => {
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-xs">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-center">
-            Sign out from {APP_TITLE}?
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            You will be redirected to the home page.
-          </AlertDialogDescription>
+          <AlertDialogTitle className="text-center">Sign out from {APP_TITLE}?</AlertDialogTitle>
+          <AlertDialogDescription>You will be redirected to the home page.</AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-center">
           <Button variant="outline" onClick={() => setOpen(false)}>

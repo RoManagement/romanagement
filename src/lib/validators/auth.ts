@@ -18,10 +18,7 @@ export type CreateWorkspaceInput = z.infer<typeof createWorkspaceSchema>;
 
 export const loginSchema = z.object({
   email: z.string().email("Please enter a valid email."),
-  password: z
-    .string()
-    .min(8, "Password is too short. Minimum 8 characters required.")
-    .max(255),
+  password: z.string().min(8, "Password is too short. Minimum 8 characters required.").max(255),
 });
 export type LoginInput = z.infer<typeof loginSchema>;
 
@@ -35,3 +32,10 @@ export const resetPasswordSchema = z.object({
   password: z.string().min(8, "Password is too short").max(255),
 });
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+
+export const newPasswordSchema = z
+  .object({
+    password: z.string().min(1, "Invalid token"),
+    newPassword: z.string().min(8, "Password is too short").max(255),
+  });
+export type NewPasswordInput = z.infer<typeof newPasswordSchema>;

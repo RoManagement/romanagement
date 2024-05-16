@@ -152,6 +152,18 @@ export const workspaceUserRelations = relations(workspaceUsers, ({ one }) => ({
   }),
 }));
 
+export const admins = pgTable(
+  "admins",
+  {
+    id: varchar("id", { length: 21 }).primaryKey(),
+    userId: varchar("user_id", { length: 21 }).notNull(),
+    role: varchar("role", { length: 25 }).default("Admin"),
+  },
+  (t) => ({
+    userIdx: index("admin_user_idx").on(t.userId),
+  }),
+);
+
 export type Post = typeof posts.$inferSelect;
 export type NewPost = typeof posts.$inferInsert;
 export type Workspace = typeof workspaces.$inferSelect;

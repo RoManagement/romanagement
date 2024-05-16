@@ -15,6 +15,8 @@ import {
   loginSchema,
   setEmailSchema,
   createWorkspaceSchema,
+  newPasswordSchema,
+  type NewPasswordInput,
   type CreateWorkspaceInput,
   type LoginInput,
   type EmailInput,
@@ -33,6 +35,60 @@ export interface ActionResponse<T> {
   formError?: string;
   success?: string;
   workspaceId?: string;
+}
+
+export async function setNewPassword(_: any, formData: FormData): Promise<ActionResponse<NewPasswordInput>> {
+  const obj = Object.fromEntries(formData.entries());
+
+  const parsed = newPasswordSchema.safeParse(obj);
+  if (!parsed.success) {
+    const err = parsed.error.flatten();
+    return {
+      fieldError: {
+        password: err.fieldErrors.password?.[0],
+      },
+    };
+  }
+
+  const { password, newPassword } = parsed.data;
+
+  const { user } = await validateRequest();
+
+  if (!user) {
+    return redirect(Paths.Login);
+  }
+
+  if (!user.email) {
+    return {
+      formError: "User does not have an email, please set a new email to continue",
+    };
+  }
+
+  const existingUser = await db.query.users.findFirst({
+    where: (table, { eq }) => eq(table.email, user.email ?? ""),
+  });
+
+  if (!existingUser?.hashedPassword) {
+    return {
+      formError: "User does not have a password set",
+    };
+  }
+
+  const validPassword = await new Scrypt().verify(existingUser.hashedPassword, password);
+
+  if (!validPassword) {
+    return {
+      formError: "Incorrect password, Please make sure you've entered the old password correctly.",
+    };
+  }
+
+  const hashedPassword = await new Scrypt().hash(newPassword);
+
+  await db.update(users).set({ hashedPassword }).where(eq(users.id, user.id));
+
+  return {
+    success: "Password updated successfully!",
+  };
 }
 
 export async function reactivateWorkspace(workspaceId: string, isEligible: boolean): Promise<void> {
@@ -311,7 +367,7 @@ export async function setEmail(_: any, formData: FormData): Promise<ActionRespon
     };
   }
 
-  await db.update(users).set({ email }).where(eq(users.id, user.id));
+  await db.update(users).set({ email, emailVerified: false }).where(eq(users.id, user.id));
 
   return redirect(Paths.VerifyEmail);
 }
@@ -446,4 +502,16 @@ async function generatePasswordResetToken(userId: string): Promise<string> {
     expiresAt: createDate(new TimeSpan(2, "h")),
   });
   return tokenId;
+}
+
+export async function getIsAdmin(userId: string): Promise<boolean> {
+  const admin = await db.query.admins.findFirst({
+    where: (table, { eq }) => eq(table.userId, userId),
+  });
+
+  if (!admin) {
+    return false;
+  }
+
+  return true;
 }
