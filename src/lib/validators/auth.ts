@@ -39,3 +39,9 @@ export const newPasswordSchema = z
     newPassword: z.string().min(8, "Password is too short").max(255),
   });
 export type NewPasswordInput = z.infer<typeof newPasswordSchema>;
+
+export const deleteAccountSchema = z.object({
+  robloxId: z.string().min(1, "Invalid Roblox ID"),
+})
+
+export type DeleteAccountInput = z.infer<typeof deleteAccountSchema>;

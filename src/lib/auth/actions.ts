@@ -16,19 +16,68 @@ import {
   setEmailSchema,
   createWorkspaceSchema,
   newPasswordSchema,
+  deleteAccountSchema,
+  type DeleteAccountInput,
   type NewPasswordInput,
   type CreateWorkspaceInput,
   type LoginInput,
   type EmailInput,
   resetPasswordSchema,
 } from "@/lib/validators/auth";
-import { emailVerificationCodes, passwordResetTokens, users, workspaces, workspaceUsers } from "@/server/db/schema";
+import { admins, emailVerificationCodes, passwordResetTokens, users, workspaces, workspaceUsers } from "@/server/db/schema";
 import { sendMail, EmailTemplate } from "@/lib/email";
 import { validateRequest } from "@/lib/auth/validate-request";
 import { Paths } from "../constants";
 import { env } from "@/env";
 import { getGroupInfo, getGroupLogo } from "../roblox/utils";
 import { group } from "console";
+import { api } from "@/trpc/server";
+
+export async function deleteAccount(_: any, formData: FormData): Promise<ActionResponse<DeleteAccountInput>> {
+  const obj = Object.fromEntries(formData.entries());
+
+  const parsed = deleteAccountSchema.safeParse(obj);
+  if (!parsed.success) {
+    const err = parsed.error.flatten();
+    return {
+      fieldError: {
+        robloxId: err.fieldErrors.robloxId?.[0],
+      },
+    };
+  }
+
+  const { robloxId } = parsed.data;
+
+  const { user, session } = await validateRequest();
+
+  if (!user) {
+    return redirect(Paths.Login);
+  }
+
+  const stripePlan = await api.stripe.getPlan.query();
+
+  if (stripePlan?.isPro === true) {
+    return {
+      formError: "You must downgrade your plan before deleting your account",
+    };
+  }
+
+  if (user.robloxId !== robloxId) {
+    return {
+      formError: "Invalid Roblox ID",
+    };
+  }
+
+  await db.delete(users).where(eq(users.id, user.id));
+  await db.delete(workspaceUsers).where(eq(workspaceUsers.userId, user.id));
+  await db.delete(workspaces).where(eq(workspaces.ownerId, user.id));
+  await db.delete(admins).where(eq(admins.userId, user.id));
+
+  await lucia.invalidateSession(session.id);
+  const sessionCookie = lucia.createBlankSessionCookie();
+  cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+  return redirect("/");
+}
 
 export interface ActionResponse<T> {
   fieldError?: Partial<Record<keyof T, string | undefined>>;

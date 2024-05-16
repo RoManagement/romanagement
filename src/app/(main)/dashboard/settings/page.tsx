@@ -5,6 +5,7 @@ import { env } from "@/env";
 import { validateRequest } from "@/lib/auth/validate-request";
 import { NewEmail } from "./_components/newEmail";
 import { NewPassword } from "./_components/newPassword";
+import { DeleteAccount } from "./_components/deleteAccount";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -28,6 +29,7 @@ export default async function BillingPage() {
       <div className="grid gap-6">
         <NewEmail user={user}/>
         <NewPassword/>
+        <DeleteAccount user={user}/>
       </div>
     </div>
   );

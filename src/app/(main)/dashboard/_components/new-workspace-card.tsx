@@ -17,7 +17,7 @@ import { LoadingButton } from "@/components/loading-button";
 import { useFormState } from "react-dom";
 import { createWorkspace } from "@/lib/auth/actions";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
 interface NewWorkspaceProps {
   isEligible: boolean;
@@ -27,7 +27,7 @@ export const NewWorkspaceCard = ({ isEligible }: NewWorkspaceProps) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-const handleFormAction = async (state: any, payload: any) => {
+  const handleFormAction = async (state: any, payload: any) => {
     // Step 2: Capture the workspaceId from the createWorkspace function
     const result = await createWorkspace(state, isEligible, payload);
     if (result?.workspaceId) {
