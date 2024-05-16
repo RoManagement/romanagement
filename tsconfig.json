@@ -37,6 +37,6 @@
     "**/*.cjs",
     "**/*.js",
     ".next/types/**/*.ts"
-  ],
+, "next.config.js", "src/app/(landing)/privacy-policy/page.mdx"  ],
   "exclude": ["node_modules"]
 }
