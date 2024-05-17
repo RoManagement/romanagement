@@ -1,11 +1,9 @@
 import { headers } from "next/headers";
-
 import type Stripe from "stripe";
-
 import { env } from "@/env";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { users, workspaces } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function POST(req: Request) {
@@ -29,7 +27,7 @@ export async function POST(req: Request) {
 
   switch (event.type) {
     case "checkout.session.completed": {
-      const checkoutSessionCompleted = event.data.object;
+      const checkoutSessionCompleted = event.data.object as Stripe.Checkout.Session;
 
       const userId = checkoutSessionCompleted?.metadata?.userId;
 
@@ -39,14 +37,10 @@ export async function POST(req: Request) {
         });
       }
 
-      // Retrieve the subscription details from Stripe
       const subscription = await stripe.subscriptions.retrieve(
         checkoutSessionCompleted.subscription as string,
       );
 
-      // Update the user stripe into in our database
-      // Since this is the initial subscription, we need to update
-      // the subscription id and customer id
       await db
         .update(users)
         .set({
@@ -62,7 +56,7 @@ export async function POST(req: Request) {
       break;
     }
     case "invoice.payment_succeeded": {
-      const invoicePaymentSucceeded = event.data.object;
+      const invoicePaymentSucceeded = event.data.object as Stripe.Invoice;
 
       const userId = invoicePaymentSucceeded?.metadata?.userId;
 
@@ -72,12 +66,10 @@ export async function POST(req: Request) {
         });
       }
 
-      // Retrieve the subscription details from Stripe
       const subscription = await stripe.subscriptions.retrieve(
         invoicePaymentSucceeded.subscription as string,
       );
 
-      // Update the price id and set the new period end
       await db
         .update(users)
         .set({
@@ -90,8 +82,28 @@ export async function POST(req: Request) {
 
       break;
     }
-/*     default:
-      console.warn(`Unhandled event type: ${event.type}`); */
+    case "customer.subscription.deleted":
+    case "invoice.payment_failed": {
+      const subscriptionEvent = event.data.object as Stripe.Subscription | Stripe.Invoice;
+
+      const userId = subscriptionEvent?.metadata?.userId;
+
+      if (!userId) {
+        return new Response("User id not found in event metadata.", {
+          status: 404,
+        });
+      }
+
+      // Deactivate user workspaces
+      await db
+        .update(workspaces)
+        .set({ status: "Inactive" })
+        .where(eq(workspaces.ownerId, userId));
+
+      break;
+    }
+    default:
+      console.warn(`Unhandled event type: ${event.type}`);
   }
 
   return new Response(null, { status: 200 });
