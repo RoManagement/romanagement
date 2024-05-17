@@ -5,16 +5,9 @@ import { useEffect, useRef } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "@/components/icons";
-import { logout, setEmail, resendVerificationEmail as resendEmail } from "@/lib/auth/actions";
+import { setEmail } from "@/lib/auth/actions";
 import { SubmitButton } from "@/components/submit-button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Props {
   user: any;

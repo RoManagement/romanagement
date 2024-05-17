@@ -1,4 +1,3 @@
-import { CheckCircledIcon, ExclamationTriangleIcon, FilePlusIcon } from "@/components/icons";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -7,17 +6,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
 import { Key, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/submit-button";
-import { LoadingButton } from "@/components/loading-button";
 import { useFormState } from "react-dom";
 import { deleteAccount } from "@/lib/auth/actions";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 
 interface Props {
   user: any;

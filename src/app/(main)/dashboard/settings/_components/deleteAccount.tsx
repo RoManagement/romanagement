@@ -1,20 +1,6 @@
-"use client";
-import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
-import { useEffect, useRef, useState } from "react";
-import { useFormState } from "react-dom";
-import { toast } from "sonner";
-import { ExclamationTriangleIcon } from "@/components/icons";
-import { logout, setEmail, resendVerificationEmail as resendEmail } from "@/lib/auth/actions";
-import { SubmitButton } from "@/components/submit-button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+"use client";;
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DeleteAccountAlert } from "./deleteAccountAlert";
 
 interface Props {

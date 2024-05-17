@@ -1,40 +1,10 @@
-"use client";
-
-import { useRef } from "react";
+"use client";;
 import { type RouterOutputs } from "@/trpc/shared";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { WorkspacePreview } from "./workspace-preview";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { api } from "@/trpc/react";
-import { Pencil2Icon } from "@/components/icons";
-import { LoadingButton } from "@/components/loading-button";
 import Link from "next/link";
-import { createPostSchema } from "@/server/api/routers/post/post.input";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Bell, Home, LineChart, Users, ClipboardMinus, ArrowLeft, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import React, { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
 import { WorkspaceSettings } from "./workspace-settings";
 import { WorkspaceAnnouncements } from "./workspace-announcements";
 import { WorkspaceDocumentation } from "./workspace-documentation";

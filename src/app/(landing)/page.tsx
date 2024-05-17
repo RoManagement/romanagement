@@ -1,15 +1,7 @@
 import Link from "next/link";
 import { type Metadata } from "next";
-import { PlusIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { CopyToClipboard } from "./_components/copy-to-clipboard";
-import {
-  LuciaAuth,
-  NextjsLight,
-  NextjsDark,
-  ReactJs,
-} from "./_components/feature-icons";
+import { NextjsLight, NextjsDark } from "./_components/feature-icons";
 import CardSpotlight from "./_components/hover-card";
 import { api } from "@/trpc/server";
 import React from "react";

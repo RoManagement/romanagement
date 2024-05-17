@@ -5,11 +5,7 @@ import { useEffect, useRef } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "@/components/icons";
-import {
-  logout,
-  setEmail,
-  resendVerificationEmail as resendEmail,
-} from "@/lib/auth/actions";
+import { setEmail } from "@/lib/auth/actions";
 import { SubmitButton } from "@/components/submit-button";
 
 export const SetEmail = () => {

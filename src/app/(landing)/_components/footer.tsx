@@ -1,6 +1,5 @@
 import { CodeIcon } from "@radix-ui/react-icons";
 import { ThemeToggle } from "@/components/theme-toggle";
-import Link from "next/link";
 
 const twitterUrl = "https://twitter.com/EvanDevvv";
 const privacyPolicyUrl = "/privacy-policy";
