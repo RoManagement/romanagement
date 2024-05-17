@@ -23,6 +23,7 @@ export const listPosts = async (ctx: ProtectedTRPCContext, input: ListPostsInput
       excerpt: true,
       status: true,
       createdAt: true,
+      workspaceId: true,
     },
     with: { user: { columns: { email: true } } },
   });
@@ -44,6 +45,7 @@ export const createPost = async (ctx: ProtectedTRPCContext, input: CreatePostInp
     title: input.title,
     excerpt: input.excerpt,
     content: input.content,
+    workspaceId: input.workspaceId,
   });
 
   return { id };
@@ -56,6 +58,7 @@ export const updatePost = async (ctx: ProtectedTRPCContext, input: UpdatePostInp
       title: input.title,
       excerpt: input.excerpt,
       content: input.content,
+      workspaceId: input.workspaceId,
     })
     .where(eq(posts.id, input.id))
     .returning();
@@ -70,7 +73,7 @@ export const deletePost = async (ctx: ProtectedTRPCContext, { id }: DeletePostIn
 
 export const myPosts = async (ctx: ProtectedTRPCContext, input: MyPostsInput) => {
   return ctx.db.query.posts.findMany({
-    where: (table, { eq }) => eq(table.userId, ctx.user.id),
+    where: (table, { eq }) => eq(table.workspaceId, input.workspaceId),
     offset: (input.page - 1) * input.perPage,
     limit: input.perPage,
     orderBy: (table, { desc }) => desc(table.createdAt),
@@ -80,6 +83,8 @@ export const myPosts = async (ctx: ProtectedTRPCContext, input: MyPostsInput) =>
       excerpt: true,
       status: true,
       createdAt: true,
+      workspaceId: true,
+      content: true,
     },
   });
 };

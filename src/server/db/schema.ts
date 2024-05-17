@@ -81,6 +81,7 @@ export const posts = pgTable(
   "posts",
   {
     id: varchar("id", { length: 15 }).primaryKey(),
+    workspaceId: varchar("workspace_id", { length: 255 }).notNull(),
     userId: varchar("user_id", { length: 255 }).notNull(),
     title: varchar("title", { length: 255 }).notNull(),
     excerpt: varchar("excerpt", { length: 255 }).notNull(),
@@ -99,6 +100,10 @@ export const posts = pgTable(
 );
 
 export const postRelations = relations(posts, ({ one }) => ({
+  workspace: one(workspaces, {
+    fields: [posts.workspaceId],
+    references: [workspaces.id],
+  }),
   user: one(users, {
     fields: [posts.userId],
     references: [users.id],
@@ -138,6 +143,7 @@ export const workspaceUsers = pgTable(
 );
 
 export const workspaceRelations = relations(workspaces, ({ many }) => ({
+  posts: many(posts),
   workspaceUsers: many(workspaceUsers)
 }));
 
@@ -163,6 +169,13 @@ export const admins = pgTable(
     userIdx: index("admin_user_idx").on(t.userId),
   }),
 );
+
+export const adminRelations = relations(admins, ({ one }) => ({
+  user: one(users, {
+    fields: [admins.userId],
+    references: [users.id],
+  }),
+}));
 
 export type Post = typeof posts.$inferSelect;
 export type NewPost = typeof posts.$inferInsert;

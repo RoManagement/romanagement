@@ -17,7 +17,7 @@ const options: Components = {
   ),
 };
 
-export const WorkspacePreview = ({ text }: { text: string }) => {
+export const NewAnnouncementPreview = ({ text }: { text: string }) => {
   return (
     <Markdown
       remarkPlugins={[remarkGfm]}

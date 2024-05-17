@@ -44,9 +44,10 @@ const markdownlink = "https://remarkjs.github.io/react-markdown/";
 
 interface Props {
   workspace: RouterOutputs["workspace"]["get"];
+  promises: Promise<[RouterOutputs["post"]["myPosts"], RouterOutputs["stripe"]["getPlan"]]>;
 }
 
-export const WorkspaceEditor = ({ workspace }: Props) => {
+export const WorkspaceEditor = ({ workspace, promises }: Props) => {
   if (!workspace) return null;
 
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -65,7 +66,7 @@ export const WorkspaceEditor = ({ workspace }: Props) => {
       case "dashboard":
         return <WorkspaceDashboard />;
       case "announcements":
-        return <WorkspaceAnnouncements />;
+        return <WorkspaceAnnouncements workspaceId={workspace.id} promises={promises} />;
       case "documentation":
         return <WorkspaceDocumentation />;
       case "workspace-members":
