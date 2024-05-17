@@ -9,8 +9,7 @@ import { WorkspaceSettings } from "./workspace-settings";
 import { WorkspaceAnnouncements } from "./workspace-announcements";
 import { WorkspaceDocumentation } from "./workspace-documentation";
 import { WorkspaceDashboard } from "./workspace-dashboard";
-
-const markdownlink = "https://remarkjs.github.io/react-markdown/";
+import Image from "next/image";
 
 interface Props {
   workspace: RouterOutputs["workspace"]["get"];
@@ -58,7 +57,7 @@ export const WorkspaceEditor = ({ workspace, promises }: Props) => {
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
               <Link href="/" className="flex items-center gap-4 font-semibold">
-                <img
+                <Image
                   src={workspace.logo ?? ""}
                   alt={workspace.name ?? ""}
                   className="h-[45px] w-[45px]"

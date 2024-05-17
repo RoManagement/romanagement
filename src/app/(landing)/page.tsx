@@ -102,12 +102,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-function NextjsIcon({ className }: { className?: string }) {
-  return (
-    <>
-      <NextjsLight className={className + " dark:hidden"} />
-      <NextjsDark className={className + " hidden dark:block"} />
-    </>
-  );
-}

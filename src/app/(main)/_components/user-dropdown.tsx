@@ -27,6 +27,7 @@ import { ExclamationTriangleIcon } from "@/components/icons";
 import { logout } from "@/lib/auth/actions";
 import { APP_TITLE } from "@/lib/constants";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export const UserDropdown = ({
   email,
@@ -44,13 +45,13 @@ export const UserDropdown = ({
     <DropdownMenu>
       <DropdownMenuTrigger className={className}>
         {/* eslint @next/next/no-img-element:off */}
-        <img
+        <Image
           src={avatar ?? "https://source.boringavatars.com/marble/60/" + email}
           alt="Avatar"
           className="block h-8 w-8 rounded-full leading-none"
           width={64}
           height={64}
-        ></img>
+        ></Image>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel className="text-muted-foreground">{email}</DropdownMenuLabel>

@@ -6,6 +6,7 @@ import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { type RouterOutputs } from "@/trpc/shared";
 import Link from "next/link";
 import { ReactivateButton } from "./reactivate-button";
+import Image from "next/image";
 
 interface WorkspaceCardProps {
   isEligible: boolean;
@@ -22,7 +23,7 @@ export const WorkspaceCard = async ({ workspace, isEligible }: WorkspaceCardProp
     <Card>
       <CardHeader>
         <CardTitle className="line-clamp-2 text-base">
-          <img
+          <Image
             src={workspace.logo ?? ""}
             alt={workspace.name ?? ""}
             className="mb-2 h-[45px] w-[45px]"
