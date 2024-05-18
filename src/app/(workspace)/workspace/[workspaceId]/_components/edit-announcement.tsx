@@ -80,6 +80,7 @@ export const EditAnnouncement = ({ workspaceId, post, setOptimisticPosts }: Prop
           onSuccess: () => {
             toast.success("Announcement updated");
             setOpen(false);
+            router.refresh();
           },
           onError: () => {
             toast.error("Failed to update announcement");
