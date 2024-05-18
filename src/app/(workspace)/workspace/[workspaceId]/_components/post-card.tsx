@@ -32,8 +32,6 @@ interface PostCardProps {
 export const PostCard = ({ post, userName, workspaceId, setOptimisticPosts }: PostCardProps) => {
   const router = useRouter();
 
-  console.log(post);
-
   return (
     <>
       <Card>

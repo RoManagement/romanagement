@@ -32,8 +32,6 @@ export const WorkspaceNav = ({ workspace, promises }: Props) => {
 
   if (!subscriptionPlan) return null;
 
-  console.log(subscriptionPlan);
-
   const renderSection = () => {
     switch (activeSection) {
       case "dashboard":

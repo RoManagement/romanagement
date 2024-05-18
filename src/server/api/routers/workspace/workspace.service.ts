@@ -113,7 +113,6 @@ export const myWorkspaces = async (ctx: ProtectedTRPCContext, input: MyWorkspace
     const workspaceIds = userWorkspaces.map((userWorkspace) => userWorkspace.workspaceId);
 
     if (workspaceIds.length === 0) {
-      console.log("User is not in any workspaces.");
       return []; // Return an empty array since the user is not in any workspaces
     }
 
@@ -135,10 +134,6 @@ export const myWorkspaces = async (ctx: ProtectedTRPCContext, input: MyWorkspace
         ownerId: true,
       },
     });
-
-    console.log("My workspaces:", workspaces);
-    console.log("User workspaces:", userWorkspaces);
-    console.log("Workspace IDs:", workspaceIds);
 
     return workspaces;
   } catch (error) {
