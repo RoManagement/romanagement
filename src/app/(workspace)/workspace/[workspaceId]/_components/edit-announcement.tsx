@@ -77,6 +77,15 @@ export const EditAnnouncement = ({ workspaceId, post, setOptimisticPosts }: Prop
           ...values,
         },
         {
+          onSettled: () => {
+            setOptimisticPosts({
+              action: "update",
+              post: {
+                ...post,
+                ...values,
+              },
+            })
+          },
           onSuccess: () => {
             toast.success("Announcement updated");
             setOpen(false);

@@ -1,12 +1,12 @@
-"use client";;
-import { Pencil2Icon } from "@/components/icons";
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { type RouterOutputs } from "@/trpc/shared";
 import Link from "next/link";
 import { ReactivateButton } from "./reactivate-button";
-import Image from "next/image";
+import { ExternalLink } from "lucide-react";
 
 interface WorkspaceCardProps {
   isEligible: boolean;
@@ -37,8 +37,8 @@ export const WorkspaceCard = async ({ workspace, isEligible }: WorkspaceCardProp
         ) : (
           <Button variant="secondary" size="sm" asChild>
             <Link href={`/workspace/${workspace.id}`}>
-              <Pencil2Icon className="mr-1 h-4 w-4" />
-              <span>Open</span>
+              <ExternalLink className="mr-1 h-4 w-4" />
+              <span>Dashboard</span>
             </Link>
           </Button>
         )}

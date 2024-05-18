@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Bell, Home, LineChart, Users, ClipboardMinus, ArrowLeft, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState } from "react";
+import React, { useState } from "react";
 import { WorkspaceSettings } from "./workspace-settings";
 import { WorkspaceAnnouncements } from "./workspace-announcements";
 import { WorkspaceDocumentation } from "./workspace-documentation";
@@ -27,6 +27,12 @@ export const WorkspaceNav = ({ workspace, promises }: Props) => {
   const isButtonActive = (section: string) => {
     return section === activeSection ? "bg-muted" : "";
   };
+
+  const [posts, subscriptionPlan] = React.use(promises);
+
+  if (!subscriptionPlan) return null;
+
+  console.log(subscriptionPlan);
 
   const renderSection = () => {
     switch (activeSection) {
@@ -134,19 +140,21 @@ export const WorkspaceNav = ({ workspace, promises }: Props) => {
                 <ArrowLeft className="h-5 w-5" /> Back to Dashboard
               </Link>
             </div>
-            <Card>
-              <CardHeader className="p-2 pt-0 md:p-4">
-                <CardTitle>Upgrade to Pro</CardTitle>
-                <CardDescription>
-                  Unlock all features and get unlimited access to our support team.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-                <Button size="sm" className="w-full">
-                  <Link href="/dashboard/billing">Upgrade</Link>
-                </Button>
-              </CardContent>
-            </Card>
+            {!subscriptionPlan.isPro && (
+          <Card>
+            <CardHeader className="p-2 pt-0 md:p-4">
+              <CardTitle>Upgrade to Pro</CardTitle>
+              <CardDescription>
+                Unlock all features and get unlimited access to our support team.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
+              <Button size="sm" className="w-full">
+                <Link href="/dashboard/billing">Upgrade</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
           </div>
         </div>
       </div>
