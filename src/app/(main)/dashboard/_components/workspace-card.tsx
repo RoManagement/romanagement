@@ -23,7 +23,7 @@ export const WorkspaceCard = async ({ workspace, isEligible }: WorkspaceCardProp
     <Card>
       <CardHeader>
         <CardTitle className="line-clamp-2 text-base">
-          <Image
+          <img
             src={workspace.logo ?? ""}
             alt={workspace.name ?? ""}
             className="mb-2 h-[45px] w-[45px]"

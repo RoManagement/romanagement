@@ -17,7 +17,7 @@ const options: Components = {
   ),
 };
 
-export const NewAnnouncementPreview = ({ text }: { text: string }) => {
+export const AnnouncementPreview = ({ text }: { text: string }) => {
   return (
     <Markdown
       remarkPlugins={[remarkGfm]}

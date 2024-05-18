@@ -1,7 +1,7 @@
 import React from "react";
 import { api } from "@/trpc/server";
 import { notFound, redirect } from "next/navigation";
-import { WorkspaceEditor } from "./_components/workspace-editor";
+import { WorkspaceNav } from "./_components/workspace-nav";
 import { validateRequest } from "@/lib/auth/validate-request";
 import { Paths } from "@/lib/constants";
 import { myPostsSchema } from "@/server/api/routers/post/post.input";
@@ -24,13 +24,13 @@ export default async function EditWorkspacePage({ params }: Props) {
   const { page, perPage } = myPostsSchema.parse(params);
 
   const promises = Promise.all([
-    api.post.myPosts.query({ page, perPage, workspaceId: params.workspaceId}),
+    api.post.myPosts.query({ page, perPage, workspaceId: params.workspaceId }),
     api.stripe.getPlan.query(),
   ]);
 
   return (
     <>
-    <WorkspaceEditor workspace={workspace} promises={promises} />
+      <WorkspaceNav workspace={workspace} promises={promises} />
     </>
   );
 }

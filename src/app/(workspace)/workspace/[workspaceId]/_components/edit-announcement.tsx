@@ -1,6 +1,6 @@
 "use client";
 
-import { FilePlusIcon } from "@/components/icons";
+import { FilePlusIcon, Pencil2Icon, TrashIcon } from "@/components/icons";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPostSchema } from "@/server/api/routers/post/post.input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -34,85 +34,105 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { AnnouncementPreview } from "./announcement-preview";
 import { LoadingButton } from "@/components/loading-button";
-import { useState } from "react";
 
 const markdownlink = "https://remarkjs.github.io/react-markdown/";
 
 interface Props {
   workspaceId: string;
+  post: RouterOutputs["post"]["get"];
   setOptimisticPosts: (action: {
     action: "add" | "delete" | "update";
     post: RouterOutputs["post"]["myPosts"][number];
   }) => void;
 }
 
-export const NewAnnouncement = ({ workspaceId, setOptimisticPosts }: Props) => {
+export const EditAnnouncement = ({ workspaceId, post, setOptimisticPosts }: Props) => {
+  if (!post) {
+    return null;
+  }
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const post = api.post.create.useMutation();
+  const [clickCount, setClickCount] = useState(0);
+  const updatePost = api.post.update.useMutation();
+  const deletePost = api.post.delete.useMutation();
   const [isCreatePending, startCreateTransaction] = React.useTransition();
+  const [isDeletePending, startDeleteTransition] = React.useTransition();
+
   const form = useForm({
     defaultValues: {
-      title: "Untitled Announcement",
-      excerpt: "Write a short description here",
-      content: "Write your content here",
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
       workspaceId: workspaceId,
     },
     resolver: zodResolver(createPostSchema),
   });
   const formRef = useRef<HTMLFormElement>(null);
+
   const onSubmit = form.handleSubmit(async (values) => {
     startCreateTransaction(async () => {
-      await post.mutateAsync(
+      await updatePost.mutateAsync(
         {
-          title: values.title,
-          content: values.content,
-          excerpt: values.excerpt,
-          workspaceId: workspaceId,
+          id: post.id,
+          ...values,
         },
         {
-          onSettled: () => {
-            setOptimisticPosts({
-              action: "add",
-              post: {
-                id: crypto.randomUUID(),
-                title: values.title,
-                excerpt: values.excerpt,
-                workspaceId: workspaceId,
-                content: values.content,
-                status: "published",
-                createdAt: new Date(),
-              },
-            });
-          },
-          onSuccess: ({ id }) => {
-            toast.success("Announcement created");
+          onSuccess: () => {
+            toast.success("Announcement updated");
             setOpen(false);
-            router.refresh();
           },
           onError: () => {
-            toast.error("Failed to create announcement");
+            toast.error("Failed to update announcement");
           },
         },
       );
     });
   });
 
+  const handleDeleteClick = () => {
+    if (clickCount === 1) {
+      startDeleteTransition(async () => {
+        await deletePost.mutateAsync(
+          { id: post.id },
+          {
+            onSettled: () => {
+              setOptimisticPosts({
+                action: "delete",
+                post,
+              });
+            },
+            onSuccess: () => {
+              toast.success("Post deleted");
+              router.refresh();
+              setOpen(false);
+            },
+            onError: () => {
+              toast.error("Failed to delete post");
+            },
+          },
+        );
+      });
+    } else {
+      setClickCount(1);
+      setTimeout(() => {
+        setClickCount(0);
+      }, 3000); // Reset click count after 3 seconds
+    }
+  };
+
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger>
-        <Button
-          className="flex cursor-pointer items-center justify-center bg-card p-6 text-muted-foreground transition-colors hover:bg-secondary/10 dark:border-none dark:bg-secondary/30 dark:hover:bg-secondary/50"
-          asChild
-        >
-          <div className="flex flex-col items-center">
-            <p className="text-sm">New Announcement</p>
+        <Button variant="secondary" size="sm" className="w-full" asChild>
+          <div>
+            <Pencil2Icon className="mr-1 h-4 w-4" />
+            <span>Edit</span>
           </div>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-xl">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-center">New Announcement</AlertDialogTitle>
+          <AlertDialogTitle className="text-center">Edit</AlertDialogTitle>
         </AlertDialogHeader>
 
         <Form {...form}>
@@ -183,8 +203,18 @@ export const NewAnnouncement = ({ workspaceId, setOptimisticPosts }: Props) => {
           onClick={() => formRef.current?.requestSubmit()}
           className="ml-auto w-full"
         >
-          Post
+          Update
         </LoadingButton>
+        <Button
+          disabled={isDeletePending}
+          variant="destructive"
+          className="w-full"
+          onClick={handleDeleteClick}
+        >
+          {clickCount === 0
+            ? "Delete (Click Twice to Confirm)"
+            : "Are you sure? Click again to delete"}
+        </Button>
         <Button variant="outline" className="w-full" onClick={() => setOpen(false)}>
           Cancel
         </Button>
