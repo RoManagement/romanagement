@@ -12,10 +12,11 @@ import { WorkspaceDashboard } from "./workspace-dashboard";
 
 interface Props {
   workspace: RouterOutputs["workspace"]["get"];
-  promises: Promise<[RouterOutputs["post"]["myPosts"], RouterOutputs["stripe"]["getPlan"]]>;
+  postPromises: Promise<[RouterOutputs["post"]["myPosts"], RouterOutputs["stripe"]["getPlan"]]>;
+  documentPromises: Promise<[RouterOutputs["document"]["myDocuments"], RouterOutputs["stripe"]["getPlan"]]>;
 }
 
-export const WorkspaceNav = ({ workspace, promises }: Props) => {
+export const WorkspaceNav = ({ workspace, postPromises, documentPromises }: Props) => {
   if (!workspace) return null;
 
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -28,7 +29,7 @@ export const WorkspaceNav = ({ workspace, promises }: Props) => {
     return section === activeSection ? "bg-muted" : "";
   };
 
-  const [posts, subscriptionPlan] = React.use(promises);
+  const [posts, subscriptionPlan] = React.use(postPromises);
 
   if (!subscriptionPlan) return null;
 
@@ -37,9 +38,9 @@ export const WorkspaceNav = ({ workspace, promises }: Props) => {
       case "dashboard":
         return <WorkspaceDashboard />;
       case "announcements":
-        return <WorkspaceAnnouncements workspaceId={workspace.id} promises={promises} />;
+        return <WorkspaceAnnouncements workspaceId={workspace.id} promises={postPromises} />;
       case "documentation":
-        return <WorkspaceDocumentation workspaceId={workspace.id} promises={promises} />;
+        return <WorkspaceDocumentation workspaceId={workspace.id} promises={documentPromises} />;
       case "workspace-members":
         return <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6"></main>;
       case "analytics":

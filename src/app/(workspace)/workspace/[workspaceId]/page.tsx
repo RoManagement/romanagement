@@ -23,14 +23,18 @@ export default async function EditWorkspacePage({ params }: Props) {
 
   const { page, perPage } = myPostsSchema.parse(params);
 
-  const promises = Promise.all([
+  const postPromises = Promise.all([
     api.post.myPosts.query({ page, perPage, workspaceId: params.workspaceId }),
+    api.stripe.getPlan.query(),
+  ]);
+  const documentPromises = Promise.all([
+    api.document.myDocuments.query({ page, perPage, workspaceId: params.workspaceId }),
     api.stripe.getPlan.query(),
   ]);
 
   return (
     <>
-      <WorkspaceNav workspace={workspace} promises={promises} />
+      <WorkspaceNav workspace={workspace} postPromises={postPromises} documentPromises={documentPromises} />
     </>
   );
 }

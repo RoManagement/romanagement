@@ -165,11 +165,11 @@ export const EditDocument = ({ workspaceId, document, setOptimisticDocuments }: 
               name="googleDocumentLink"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Excerpt</FormLabel>
+                  <FormLabel>Google Document Link</FormLabel>
                   <FormControl>
-                    <Textarea {...field} rows={2} className="min-h-0" />
+                    <Input {...field} className="min-h-0" />
                   </FormControl>
-                  <FormDescription>A short description of your post</FormDescription>
+                  <FormDescription>You can only add google documents. Please ensure that the link works.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
