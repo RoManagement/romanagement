@@ -1,14 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import * as React from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { NewAnnouncement } from "./new-announcement";
 import { type RouterOutputs } from "@/trpc/shared";
 import { PostCard } from "./post-card";
@@ -19,7 +9,7 @@ interface Props {
 }
 
 export function WorkspaceAnnouncements({ workspaceId, promises }: Props) {
-  const [posts, subscriptionPlan] = React.use(promises);
+  const [posts] = React.use(promises);
 
   const [optimisticPosts, setOptimisticPosts] = React.useOptimistic(
     posts,

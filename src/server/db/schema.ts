@@ -99,6 +99,34 @@ export const posts = pgTable(
   }),
 );
 
+export const documents = pgTable(
+  "documents",
+  {
+    id: varchar("id", { length: 15 }).primaryKey(),
+    workspaceId: varchar("workspace_id", { length: 255 }).notNull(),
+    userId: varchar("user_id", { length: 255 }).notNull(),
+    title: varchar("title", { length: 255 }).notNull(),
+    googleDocumentLink: varchar("google_document_link").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdate(() => new Date()),
+  },
+  (t) => ({
+    userIdx: index("documents_user_idx").on(t.userId),
+    createdAtIdx: index("documents_created_at_idx").on(t.createdAt),
+  }),
+);
+
+export const documentRelations = relations(documents, ({ one }) => ({
+  workspace: one(workspaces, {
+    fields: [documents.workspaceId],
+    references: [workspaces.id],
+  }),
+  user: one(users, {
+    fields: [documents.userId],
+    references: [users.id],
+  }),
+}));
+
 export const postRelations = relations(posts, ({ one }) => ({
   workspace: one(workspaces, {
     fields: [posts.workspaceId],
@@ -144,6 +172,7 @@ export const workspaceUsers = pgTable(
 
 export const workspaceRelations = relations(workspaces, ({ many }) => ({
   posts: many(posts),
+  documents: many(documents),
   workspaceUsers: many(workspaceUsers)
 }));
 
@@ -179,5 +208,7 @@ export const adminRelations = relations(admins, ({ one }) => ({
 
 export type Post = typeof posts.$inferSelect;
 export type NewPost = typeof posts.$inferInsert;
+export type Document = typeof documents.$inferSelect;
+export type NewDocument = typeof documents.$inferInsert;
 export type Workspace = typeof workspaces.$inferSelect;
 export type NewWorkspace = typeof workspaces.$inferInsert;

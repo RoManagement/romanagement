@@ -39,7 +39,7 @@ export const WorkspaceNav = ({ workspace, promises }: Props) => {
       case "announcements":
         return <WorkspaceAnnouncements workspaceId={workspace.id} promises={promises} />;
       case "documentation":
-        return <WorkspaceDocumentation />;
+        return <WorkspaceDocumentation workspaceId={workspace.id} promises={promises} />;
       case "workspace-members":
         return <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6"></main>;
       case "analytics":
