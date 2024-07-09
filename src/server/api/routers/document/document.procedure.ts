@@ -23,7 +23,7 @@ export const documentRouter = createTRPCRouter({
     .input(inputs.deleteDocumentSchema)
     .mutation(async ({ ctx, input }) => services.deleteDocument(ctx, input)),
 
-  myPosts: protectedProcedure
+  myDocuments: protectedProcedure
     .input(inputs.myDocumentsSchema)
     .query(({ ctx, input }) => services.myDocuments(ctx, input)),
 });
