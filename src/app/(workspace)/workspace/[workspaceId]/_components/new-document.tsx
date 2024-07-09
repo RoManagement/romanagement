@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createPostSchema } from "@/server/api/routers/post/post.input";
+import { createDocumentSchema } from "@/server/api/routers/post/post.input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
@@ -51,13 +51,11 @@ export const NewDocument = ({ workspaceId }: Props) => {
       googleDocumentLink: "",
       workspaceId: workspaceId,
     },
-    resolver: zodResolver(createPostSchema),
+    resolver: zodResolver(createDocumentSchema),
   });
   const formRef = useRef<HTMLFormElement>(null);
   const onSubmit = form.handleSubmit(async (values) => {
-    startCreateTransaction(async () => {
-      console.log(values);
-    });
+    console.log(values);
   });
 
   return (

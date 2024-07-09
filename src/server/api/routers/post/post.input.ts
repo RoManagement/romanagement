@@ -1,3 +1,4 @@
+import { title } from "process";
 import { z } from "zod";
 
 export const listPostsSchema = z.object({
@@ -18,6 +19,13 @@ export const createPostSchema = z.object({
   workspaceId: z.string(),
 });
 export type CreatePostInput = z.infer<typeof createPostSchema>;
+
+export const createDocumentSchema = z.object({
+  title: z.string().min(3).max(255),
+  googleDocumentLink: z.string().url(),
+  workspaceId: z.string(),
+})
+export type CreateDocumentInput = z.infer<typeof createDocumentSchema>;
 
 export const updatePostSchema = createPostSchema.extend({
   id: z.string(),
